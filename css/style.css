@@ -1,0 +1,66 @@
+:root {
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --bg: #f8fafc;
+    --card-bg: #ffffff;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --success-bg: #dcfce7;
+    --success-border: #22c55e;
+    --error-bg: #fee2e2;
+    --error-border: #ef4444;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+
+body { background-color: var(--bg); color: var(--text-main); display: flex; justify-content: center; padding: 2rem 1rem; }
+
+.app-container { background: var(--card-bg); width: 100%; max-width: 800px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid #e2e8f0; }
+
+header { background: #1e293b; color: white; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+header select { padding: 0.5rem; border-radius: 6px; border: none; outline: none; font-size: 1rem; cursor: pointer; background: white; }
+.score-display { font-size: 1.25rem; font-weight: bold; background: rgba(255,255,255,0.1); padding: 0.5rem 1rem; border-radius: 8px; }
+
+.quiz-body { padding: 2rem; }
+.empty-state { text-align: center; color: var(--text-muted); padding: 3rem 0; }
+
+.question-header { display: flex; justify-content: space-between; margin-bottom: 1rem; color: var(--text-muted); font-weight: 500; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.question-text { font-size: 1.25rem; font-weight: 600; line-height: 1.5; margin-bottom: 1.5rem; }
+
+.options-list { display: flex; flex-direction: column; gap: 0.75rem; }
+
+/* Elementy opcji odpowiedzi */
+.option-item { display: flex; align-items: flex-start; gap: 1rem; padding: 1rem; border: 2px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.2s; background: #fff; width: 100%; user-select: none; -webkit-user-select: none; }
+.option-item:hover { border-color: #cbd5e1; background: #f8fafc; }
+.option-item input[type="checkbox"] { margin-top: 0.25rem; width: 20px; height: 20px; cursor: pointer; flex-shrink: 0; }
+.option-text { width: 100%; line-height: 1.4; font-size: 1.05rem; }
+
+code { background-color: #e2e8f0; color: #b91c1c; padding: 0.1rem 0.4rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+
+/* ============================================================ */
+/* NOWE STANY KOLORÓW PO SPRAWDZENIU ODPOWIEDZI                 */
+/* ============================================================ */
+
+/* 1. Zaznaczył poprawnie -> Czysty zielony */
+.option-item.correct-hit { background-color: var(--success-bg); border-color: var(--success-border); }
+
+/* 2. Dobrze, że nie zaznaczył (fałszywa) -> Jasnozielony, przerywana ramka */
+.option-item.good-ignore { background-color: #f0fdf4; border-color: var(--success-border); border-style: dashed; opacity: 0.8; }
+
+/* 3. Zaznaczył błędnie (fałszywa) -> Czysty czerwony */
+.option-item.wrong-hit { background-color: var(--error-bg); border-color: var(--error-border); }
+
+/* 4. Zapomniał zaznaczyć (poprawna) -> Jasnoczerwony, przerywana ramka */
+.option-item.missed-correct { background-color: #fef2f2; border-color: var(--error-border); border-style: dashed; }
+
+.actions { margin-top: 2rem; display: flex; gap: 1rem; border-top: 1px solid #e2e8f0; padding-top: 1.5rem; }
+button { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
+.btn-secondary { background: #e2e8f0; color: #475569; }
+.btn-secondary:hover { background: #cbd5e1; }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.correct-answers-box { display: none; margin-top: 1.5rem; padding: 1.2rem; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; color: #166534; }
+.correct-answers-box ul { margin-top: 0.5rem; padding-left: 1.5rem; line-height: 1.5; }
+.correct-answers-box li { margin-bottom: 0.4rem; }
