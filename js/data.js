@@ -1550,6 +1550,222 @@ const db = {
                     "values": [true, false, false, true]
                 }
             ]
+        },
+        {
+            "name": "LIN Kernel (LINUX)",
+            "questions": [
+                {
+                    "question": "Zaznacz wszystkie poprawne odpowiedzi:",
+                    "answers": [
+                        "Jądro Linuxa jest mikrojądrem (microkernel)",
+                        "Jądro Linuxa jest jądrem typu hybrydowego (hybrid)",
+                        "Jądro Linuxa jest jądrem typu monolitycznego (monolythic)",
+                        "Jądro Linuxa jest napisane w C++",
+                        "Jądro Linuxa wykorzystuje bibliotekę libc (dzięki temu można wykorzystywać np. funkcję printf())",
+                        "Jądro Linuxa jest napisane w C",
+                        "Jądro Linuxa zarządza pamięcią operacyjną (przydziały/zwolnienia)."
+                    ],
+                    "values": [false, false, true, false, false, true, true]
+                },
+                {
+                    "question": "Zaznacz wszystkie poprawne odpowiedzi:",
+                    "answers": [
+                        "Do sterowania parametrami pracy jądra można wykorzystać pliki znajdujące się w katalogu /var",
+                        "Do sterowania pracą jądra Linuxa można wykorzystać polecenie sysctl",
+                        "Do jądra systemu operacyjnego Linux można, w czasie jego pracy, dołączać różnorodną funkcjonalność (np. sterowniki urządzenia)",
+                        "Do załadowania modułu w jądrze można wykorzystać polecenia rmmod oraz modprobe -r",
+                        "Do sterowania parametrami pracy jądra można wykorzystać pliki znajdujące się w katalogu /proc",
+                        "Do sterowania pracą jądra Linuxa można wykorzystać polecenie sysinfo",
+                        "Do usunięcia modułu z jądra można wykorzystać polecenie insmod",
+                        "Do sprawdzenia jakie moduły załadowane są do jądra można wykorzystać polecenie lsmod",
+                        "Do załadowania modułu w jądrze można wykorzystać polecenie modprobe oraz insmod",
+                        "Katalog /proc zawiera pliki, pozwalające na zmianę sposobu przydzielania pamięci programom przez jądro Linux",
+                        "Katalog /var zawiera pliki, pozwalające na zmianę sposobu przydzielania pamięci programom przez jądro systemu Linux",
+                        "Do usunięcia modułu z jądra można wykorzystać polecenia modprobe oraz rmmod",
+                        "Katalogi /proc, /sys oraz polecenie sysctl pozwalają na kontrolę pracy systemu",
+                        "Z jądra systemu operacyjnego Linux, w trakcie jego pracy, można usuwać różnorodną funkcjonalność (na przykład sterowniki urządzenia)",
+                        "Do kontroli pracy systemu można wykorzystać polecenia sysctl oraz zawartość katalogu /proc",
+                        "Do sprawdzenia jakie moduły załadowane są do jądra można wykorzystać polecenie lsmod",
+                        "Do załadowania modułu w jądrze można wykorzystać polecenia modprobe oraz insmod",
+                        "Do kontroli pracy systemu można wykorzystać polecenia sysctl oraz zawartość katalogu /var"
+                    ],
+                    "values": [false, true, true, false, true, false, false, true, true, true, false, true, true, true, true, true, true, false]
+                },
+                {
+                    "question": "Zaznacz wszystkie funkcje realizowane przez jądro monolityczne (na przykład jądro Linuxa):",
+                    "answers": [
+                        "Szeregowanie procesów",
+                        "Zarządzanie pamięcią (zwalnianie/przydzielanie)",
+                        "Szeregowanie I/O",
+                        "Obsługa systemu plików"
+                    ],
+                    "values": [true, true, true, true]
+                },
+                {
+                    "question": "Jakie operacje można wykonać za pomocą polecenia sysctl?",
+                    "answers": [
+                        "Ustawić wartości dla parametrów jądra",
+                        "Ustawić wartości dla parametrów systemu plików",
+                        "Wypisać wszystkie parametry jądra w trakcie działania systemu",
+                        "Wypisać wszystkie parametry systemu plików"
+                    ],
+                    "values": [true, false, true, false]
+                },
+                {
+                    "question": "Polecenie sysctl:",
+                    "answers": [
+                        "Służy do zmiany hasła użytkownika systemu",
+                        "Umożliwia zmianę nazwy użytkownika",
+                        "Wyświetla listę użytkowników w systemie",
+                        "Pozwala na zmianę parametrów jądra systemu w trakcie działania systemu operacyjnego",
+                        "To komenda pozwalająca na konfiguracje parametrów jądra systemu Linux.",
+                        "Wykonuje konfigurację jaką można także wykonać w wirtualnym systemie plików /proc/sys.",
+                        "Pozwala na rekompilację jądra z uwzględnieniem nowych plików konfiguracyjnych.",
+                        "Wyświetla wszystkie procesy w systemie."
+                    ],
+                    "values": [false, false, false, true, true, true, false, false]
+                },
+                {
+                    "question": "Wskaż prawdziwe zdania:",
+                    "answers": [
+                        "przy overcommit_memory ustawionym na 2 system zawsze przydzieli aplikacjom dokładnie 100% pamięci RAM",
+                        "przy overcommit_memory ustawionym na 1 możliwe jest uzyskanie za pomocą malloc() ilości pamięci wirtualnej większej niż objętość pamięci fizycznej + swap",
+                        "przy overcommit_memory ustawionym na 2 ilość pamięci przydzielonej aplikacjom zależy od overcommit_ratio",
+                        "kernel nigdy nie przydziela więcej pamięci niż jest dostępne fizycznie"
+                    ],
+                    "values": [false, true, true, false]
+                },
+                {
+                    "question": "Sterowanie jądrem systemu Linux. Zaznacz poprawne odpowiedzi:",
+                    "answers": [
+                        "Nawet najdrobniejsza zmiana w pracy jądra systemu wymaga jego ponownej kompilacji.",
+                        "Możliwa jest zmiana niektórych parametrów jądra w \"locie\" korzystając z komendy sysctl.",
+                        "Po każdej zmianie parametru w jądrze systemu Linux należy ponownie uruchomić komputer.",
+                        "Wartości sysctl wczytywane są podczas startu systemu z pliku /etc/sysctl.conf."
+                    ],
+                    "values": [false, true, false, true]
+                },
+                {
+                    "question": "Sterowniki w systemach Linuxowych: Wskaż poprawne odpowiedzi.",
+                    "answers": [
+                        "Można wkompilować w jądro, ale można ładować dynamicznie bez potrzeby wkompilowywania.",
+                        "Mogą być ładowane dynamicznie w trakcie działania systemu.",
+                        "Są tylko wkompilowane w jądro i uruchamiane automatycznie. Nie ma innej możliwości instalacji i uruchomienia.",
+                        "Po instalacji nowego sterownika zawsze wymagane jest ponowne uruchomienie komputera."
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "W jaki sposób można wyłączyć partycję SWAP?",
+                    "answers": [
+                        "Nie można wyłączyć partycji SWAP",
+                        "sudo setswap off",
+                        "sudo swapoff -a",
+                        "sudo swap stop"
+                    ],
+                    "values": [false, false, true, false]
+                },
+                {
+                    "question": "Jakie jest zadanie jądra w systemie Linux?",
+                    "answers": [
+                        "Ładuje i odładowuje sterowniki urządzeń.",
+                        "Tylko i wyłącznie zarządza pamięcią.",
+                        "Pośredniczy pomiędzy aplikacją użytkownika a sprzętem.",
+                        "Zarządza pamięcią."
+                    ],
+                    "values": [true, false, true, true]
+                },
+                {
+                    "question": "Jądro w systemie Linux odpowiedzialne jest za:",
+                    "answers": [
+                        "Sterowniki urządzeń",
+                        "Wygląd interfejsu graficznego",
+                        "Zarządzanie procesami",
+                        "Obsługę pamięci"
+                    ],
+                    "values": [true, false, true, true]
+                },
+                {
+                    "question": "Moduły jądra systemu Linux: wskaż wszystkie poprawne odpowiedzi.",
+                    "answers": [
+                        "Można pisać w języku C",
+                        "Mogą być załadowane przez każdego użytkownika",
+                        "Nie posiadają możliwości wyprowadzania danych na standardowe wyjście stdout za pomocą printf",
+                        "Można je kompilować na tym samym systemie na którym zamierzamy je uruchomić."
+                    ],
+                    "values": [true, false, true, true]
+                },
+                {
+                    "question": "Co znajduje się w katalogu /proc/?",
+                    "answers": [
+                        "Informacje o procesach w systemie",
+                        "Informacje o użytkownikach",
+                        "Informacje o sieci",
+                        "Ogólne informacje o systemie"
+                    ],
+                    "values": [true, false, true, true]
+                },
+                {
+                    "question": "Program modprobe:",
+                    "answers": [
+                        "wymaga restartu aby zmiany zostały wprowadzone",
+                        "umożliwia usuwanie modułów z kernela",
+                        "umożliwia ładowanie modułów kernela",
+                        "automatycznie dodaje moduły zależne"
+                    ],
+                    "values": [false, true, true, true]
+                },
+                {
+                    "question": "Parametry jądra systemu Linux można odczytać za pomocą:",
+                    "answers": [
+                        "pliku /proc/stat",
+                        "katalogu /proc/sys",
+                        "komendy ps",
+                        "komendy sysctl"
+                    ],
+                    "values": [false, true, false, true]
+                },
+                {
+                    "question": "Które z poniższych komend sprawdza logi jądra systemu Linux:",
+                    "answers": [
+                        "dmesg",
+                        "klog",
+                        "kmllg",
+                        "kernelog"
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Jądro systemu operacyjnego Linux:",
+                    "answers": [
+                        "pośredniczy pomiędzy aplikacjami użytkownika, a sprzętem",
+                        "pośredniczy pomiędzy aplikacjami użytkownika, a pamięcią",
+                        "służy wyłącznie do uruchomienia systemu i skonfigurowania urządzeń, potem kończy swoją pracę",
+                        "NIE pozwala na ładowanie dodatkowych modułów"
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Które ze zdań dotyczących sysctl jest poprawne?",
+                    "answers": [
+                        "Katalog /proc/sys dostarcza interfejs do parametrów sysctl",
+                        "/proc/sys/vm/overcommit_memory jest odpowiednikiem parametru vm.overcommit_memory w sysctl.conf",
+                        "jeżeli katalog /proc/sys jest tylko do odczytu to da się mimo to zmieniać parametry przez komendę sysctl",
+                        "Wartości sysctl są wczytywane przy starcie systemu z /proc/sys/vm/sysctl.conf"
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Zaznacz prawdziwe zdania dotyczące partycji wymiany (SWAP) w systemie Linux:",
+                    "answers": [
+                        "Domyślnie jest na niej zapisywany zrzut pamięci RAM przy hibernacji",
+                        "Można go aktywować i dezaktywować podczas działania systemu",
+                        "Jest zamontowana w katalogu /swap",
+                        "Jest konieczna do działania systemu Linux"
+                    ],
+                    "values": [true, true, false, false]
+                }
+            ]
         }
     ]
 };
