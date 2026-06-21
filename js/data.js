@@ -1552,6 +1552,211 @@ const db = {
             ]
         },
         {
+            "name": "Konfiguracja klastra MPI (LIN)",
+            "questions": [
+                {
+                    "question": "Czym charakteryzuje się model pamięci oraz komunikacji w systemie MPI (Message Passing Interface)?",
+                    "answers": [
+                        "Każdy proces działa niezależnie i ma własną przestrzeń pamięci.",
+                        "Komunikacja pomiędzy procesami odbywa się poprzez jawne przesyłanie wiadomości.",
+                        "Procesy z różnych węzłów domyślnie współdzielą między sobą fizyczną pamięć RAM za pomocą technologii DMA.",
+                        "Komunikacja pomiędzy procesami na różnych węzłach domyślnie odbywa się z wykorzystaniem protokołu TCP."
+                    ],
+                    "values": [true, true, false, true]
+                },
+                {
+                    "question": "Jakie kroki przygotowawcze w środowisku VirtualBox zostały wskazane jako konieczne przed konfiguracją klastra na maszynach wirtualnych?",
+                    "answers": [
+                        "Należy ustawić kartę sieciową każdej z maszyn w tryb Bridged Adapter (Mostkowana karta sieciowa).",
+                        "Należy odświeżyć (wygenerować nowy) adres MAC karty sieciowej dla sklonowanych maszyn.",
+                        "Zaleca się przydzielenie maszynie wirtualnej 3 lub więcej rdzeni procesora, by móc zaobserwować wielowątkowość.",
+                        "Należy wyłączyć interfejsy sieciowe i oprzeć komunikację wyłącznie na wirtualnych portach szeregowych (COM)."
+                    ],
+                    "values": [true, true, true, false]
+                },
+                {
+                    "question": "Które zdania dotyczące bezhasłowego logowania (SSH) w tym laboratorium są poprawne?",
+                    "answers": [
+                        "Polecenie `ssh-keygen` z domyślnymi parametrami wygeneruje parę kluczy bez żądania dodatkowego hasła (passphrase), o ile to pole zostanie puste.",
+                        "Polecenie `ssh-copy-id [host_name]` powoduje przesłanie i dopisanie klucza publicznego do puli zaufanych na serwerze docelowym.",
+                        "Konfiguracja kluczy SSH jest absolutnie niezbędna, aby proces `mpirun` mógł w tle, bez przeszkód i podawania haseł, uruchamiać powiązane procesy na innych węzłach.",
+                        "Aby komunikacja w pełni działała, wystarczy wygenerować i przekazać klucze wyłącznie z workera na managera (w jedną stronę)."
+                    ],
+                    "values": [true, true, true, false]
+                },
+                {
+                    "question": "Plik `/etc/hosts` edytowany na węzłach w klastrze MPI:",
+                    "answers": [
+                        "Służy do ręcznego mapowania przyjaznych nazw (np. 'manager', 'worker1') na odpowiadające im adresy IP wewnątrz sieci wirtualnej.",
+                        "Pozwala systemowi rozwiązywać nazwy hostów przy wywoływaniu m.in. poleceń `ssh` czy `mpirun`, nie opierając się na zewnętrznym serwerze DNS.",
+                        "Powinien zawierać wylistowane wszystkie hosty biorące udział w obliczeniach wraz z ich poprawnymi adresami w danej podsieci.",
+                        "Zarządza globalnymi uprawnieniami firewalla - odrzuca połączenia pochodzące spoza wymienionej puli hostów."
+                    ],
+                    "values": [true, true, true, false]
+                },
+                {
+                    "question": "Wskaż poprawne kroki, które należy wykonać WYŁĄCZNIE na węźle typu 'manager' w celu udostępnienia zasobów sieciowych:",
+                    "answers": [
+                        "Zainstalowanie pakietu systemowego `nfs-kernel-server`.",
+                        "Dopisanie odpowiedniej reguły ścieżki i uprawnień do pliku `/etc/exports`.",
+                        "Wykorzystanie komendy `sudo mount -t nfs ...` do zamontowania zdalnego systemu plików u siebie.",
+                        "Zastosowanie zmian w konfiguracji udostępnień poprzez wpisanie polecenia `sudo exportfs -a`."
+                    ],
+                    "values": [true, true, false, true]
+                },
+                {
+                    "question": "Analiza wpisu: `/home/mpi/shared *(rw,sync,no_root_squash,no_subtree_check)` dodanego do pliku konfiguracyjnego. Co jest prawdą?",
+                    "answers": [
+                        "Znacznik `*` określa, że katalog będzie dostępny (udostępniany) dla dowolnych hostów próbujących się podłączyć.",
+                        "Parametr `rw` nadaje klientom NFS uprawnienia pozwalające zarówno na odczyt, jak i zapis danych w tym katalogu.",
+                        "Powyższy wpis musi zostać zapisany do pliku na klientach NFS w celu poprawnego mapowania zasobu.",
+                        "Parametr `sync` instruuje serwer NFS, aby odpowiadał na żądania dopiero po fizycznym zapisaniu zmian na nośniku, zabezpieczając dane przed ich utratą."
+                    ],
+                    "values": [true, true, false, true]
+                },
+                {
+                    "question": "Jak prawidłowo zestawić i zamontować dysk współdzielony na węźle typu 'worker'?",
+                    "answers": [
+                        "Należy mieć w systemie zainstalowany pakiet z narzędziami, najczęściej `nfs-common`.",
+                        "Należy upewnić się, że na dysku workera istnieje już pusty folder, który zostanie podmieniony pod mapowanie z managera (tzw. punkt montowania).",
+                        "Używa się polecenia: `sudo mount -t nfs manager:/home/mpi/shared /home/mpi/shared`.",
+                        "Należy użyć polecenia `mount -a`, aby środowisko samo odgadło lokalizację udostępnionego udziału w sieci na podstawie podsieci."
+                    ],
+                    "values": [true, true, true, false]
+                },
+                {
+                    "question": "Aby móc bez problemu programować i wywoływać środowisko OpenMPI w systemach Linux (Debian/Ubuntu), konieczna jest instalacja pakietów. Zaznacz wszystkie wykorzystane na zajęciach:",
+                    "answers": [
+                        "openmpi-bin",
+                        "openmpi-common",
+                        "libopenmpi-dev",
+                        "mpirun-daemon-core"
+                    ],
+                    "values": [true, true, true, false]
+                },
+                {
+                    "question": "Oceń prawdziwość sformułowań dotyczących narzędzi wywoływanych z powłoki terminala, stosowanych podczas programowania z użyciem MPI:",
+                    "answers": [
+                        "Pomyślna kompilacja kodu źródłowego w języku C odbywa się przez polecenie `mpicc -o cpi cpi.c`.",
+                        "Flaga `-np` podana do programu uruchomieniowego jednoznacznie określa wymaganą liczbę procesów, która zostanie powołana do życia.",
+                        "Program `mpirun` potrafi uruchomić instancje na wielu różnych węzłach w klastrze symultanicznie.",
+                        "`mpicc` jest całkowicie nowym, zbudowanym od zera wirtualnym kompilatorem – nie wykorzystuje tradycyjnego kompilatora systemu Linux."
+                    ],
+                    "values": [true, true, true, false]
+                },
+                {
+                    "question": "Polecenie `mpirun -np 6 --host worker1:3,localhost:3 ./cpi` zachowa się następująco:",
+                    "answers": [
+                        "Zleci w sumie 6 procesów do wykonania równoległego.",
+                        "Wyśle 3 procesy na zdalnego hosta opisanego w `/etc/hosts` jako 'worker1' oraz uruchomi 3 lokalnie.",
+                        "Będzie próbowało połączyć się z maszyną 'worker1' przy pomocy uprzednio wygenerowanych kluczy uwierzytelniania SSH.",
+                        "Uruchomi 6 procesów roboczych na worker1 i przekaże z nich 3 lokalne procesy sterujące do localhost."
+                    ],
+                    "values": [true, true, true, false]
+                },
+                {
+                    "question": "Z punktu widzenia budowy i działania środowiska w klastrze, dlaczego wymagane jest założenie i podpięcie wspólnego systemu plików (NFS)?",
+                    "answers": [
+                        "Aby plik wykonywalny ze skompilowanym kodem obliczeniowym był widoczny i dostępny na każdym węźle pod dokładnie tą samą, zbieżną ścieżką dostępu.",
+                        "Pozwala to na całkowite pominięcie czasochłonnego procederu kopiowania skompilowanych programów roboczych na każdego workera z osobna przy modyfikacjach kodu.",
+                        "Ogranicza to konieczność używania protokołu TCP w czasie przesyłania wiadomości (Message Passing) w bibliotece MPI.",
+                        "Sieciowy system plików jest rzekomo jedynym miejscem, z którego Linux potrafi poprawnie załadować klucze SSH dla użytkownika pobocznego."
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Zgodnie z procedurą w poleceniu do ćwiczeń, przygotowanie użytkownika 'mpi' polega m.in. na:",
+                    "answers": [
+                        "Utworzeniu nowego użytkownika i nadaniu mu praw administracyjnych poleceniem dodania do grupy `sudo`.",
+                        "Obowiązkowym przelogowaniu się na to świeże konto poleceniem w powłoce w celu wykonywania dalszych konfiguracji autoryzacji.",
+                        "Zainstalowaniu serwera `openssh-server`, by umożliwić procesom z innego hosta inicjowanie sesji połączeniowej do tego workera.",
+                        "Zablokowaniu jakiegokolwiek hasła dla użytkownika mpi i wymuszeniu logowania jako systemowy Root."
+                    ],
+                    "values": [true, true, true, false]
+                },
+                {
+                    "question": "Jakie polecenia w terminalu Linux pełnią ważne funkcje diagnostyczne, które polecono wywołać w ramach instrukcji MPI?",
+                    "answers": [
+                        "`ip addr` - wyświetli interfejsy i przydzielone przez sieć VirtualBoxa adresy IPv4 na bieżącym węźle.",
+                        "`top` - weryfikuje obciążenie, zużycie pamięci operacyjnej oraz pracę w czasie rzeczywistym powołanych procesów (rdzeni procesora).",
+                        "`ssh worker1` - proste narzędzie weryfikujące poprawność zestawionego bezhasłowego klucza dostępu pomiędzy hostami z pliku konfiguracji.",
+                        "`mpidiag` - dedykowane narzędzie służące do pingowania asynchronicznego workerów."
+                    ],
+                    "values": [true, true, true, false]
+                },
+                {
+                    "question": "Aby skompilować program i wgrać go poprawnie do klastra, tak by każdy z workerów miał do niego dostęp, trzeba:",
+                    "answers": [
+                        "Umieścić plik np. `cpi.c` na podmontowanym zasobie udostępnianym w katalogu instalacyjnym, np. w podsieci (zdefiniowany `/home/mpi/shared`).",
+                        "Użyć narzędzia wywołującego `mpicc` podając nazwę żądanego na wyjściu programu binarnego (`-o`).",
+                        "Wykorzystać polecenie systemowe `install-mpi-cluster-node`, aby wyedytować systemowe rejestry po udanej kompilacji binarki.",
+                        "Wymusić restart serwera NFS na managerze za każdym razem, po każdej re-kompilacji pliku .c."
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Jak zachowują się klucze autoryzacyjne w procesie wdrażania dostępu dla biblioteki mpirun?",
+                    "answers": [
+                        "Narzędzie `ssh-keygen` potrafi wygenerować zestaw klucza prywatnego (zostającego na hoście) oraz publicznego (udostępnianego na zewnątrz).",
+                        "Wpisanie podczas generowania hasła dodatkowego ochronnego do klucza zniszczyłoby ideę łatwego powoływania procesów w tle (żądanie by odpytywało ciągle o to hasło).",
+                        "Klucze wygenerowane jako użytkownik `mpi` muszą zostać skopiowane tylko i wyłącznie na serwer Roota po stronie Managera.",
+                        "Funkcja polecenia `ssh-copy-id` odpowiada za fizyczne dodanie Twojego wygenerowanego klucza publicznego do pliku `authorized_keys` wybranego, zdalnego systemu."
+                    ],
+                    "values": [true, true, false, true]
+                },
+                {
+                    "question": "Po całkowitej edycji dokumentu konfiguracyjnego eksportów dysku w `/etc/exports`, jak zmusić Linuxa do wczytania wpisów?",
+                    "answers": [
+                        "Można użyć przeznaczonego do tego programu z flagą: `sudo exportfs -a`.",
+                        "Należy zresetować demona usługi systemowej poleceniem: `sudo systemctl restart nfs-kernel-server`.",
+                        "Trzeba zrestartować CAŁĄ wirtualną maszynę za każdym razem, nie ma mechanizmów aktualizacji plików dyskowych w locie.",
+                        "Można użyć polecenia: `sudo mount -a`, aby system przypisał od nowa zasoby eksportowe własnym klientom."
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Zaznacz poprawne sformułowania odnośnie polecenia: `mpicc -o cpi cpi.c`.",
+                    "answers": [
+                        "To nakładka (wrapper) dostarczana przez bibliotekę MPI upraszczająca skomplikowane procesy zestawiania standardowych flag systemowego kompilatora C.",
+                        "Skutkiem bezbłędnego uruchomienia tej linii w terminalu będzie utworzenie w danym katalogu pliku wykonywalnego o nazwie `cpi`.",
+                        "W przypadku wywołania tego polecenia nie zostanie użyta żadna natywna biblioteka języka C z systemu (odcina się ona od domyślnych plików nagłówkowych Linuksa).",
+                        "Polecenie to automatycznie dołącza odpowiednie definicje nagłówkowe takie jak np. zawartość niezbędną do odczytu składni `mpi.h`."
+                    ],
+                    "values": [true, true, false, true]
+                },
+                {
+                    "question": "(Wybierz 1 FAŁSZYWĄ odpowiedź) Co jest NIEPRAWDĄ na temat komunikacji węzłów za pomocą plików systemowych w tym laboratorium?",
+                    "answers": [
+                        "Zdefiniowany wpis z hostami lokalnymi można zapisać w `/etc/hosts` w formacie `<adres_ip> <wybrana_nazwa>` (np. 192.168.0.3 worker1).",
+                        "Po modyfikacji pomyślnej nazwy hosta system DNS przekaże wpisany adres domeny internetowej globalnie przez router mostkowany.",
+                        "Można odwoływać się od tej pory po nazwach, czyli powielać polecenia np. `ssh worker1` bez ciągłego zapamiętywania adresu IPv4.",
+                        "Linuksowa powłoka w oparciu o wpisy użyje ich, aby narzędzie SSH poprawnie podłączało polecenia asynchroniczne mpirun do wskazanego maszyny."
+                    ],
+                    "values": [false, true, false, false]
+                },
+                {
+                    "question": "Jeśli polecenie uruchomieniowe `mpirun` w klastrze wielowęzłowym nagle zwraca poważny błąd połączenia i ucina procesy, co mogło zostać wykonane niepoprawnie podczas konfiguracji maszyny?",
+                    "answers": [
+                        "Plik wejściowy nie posiada nadanych uprawnień odczytu i wykonywania bądź plik kompilowany znalazł się tylko na komputerze Managera, a udział NFS nie działa / uległ awarii.",
+                        "Plik `/etc/hosts` na systemie zgłaszającym nie zawiera nazwy wskazującej odpowiedniego aliasu IP drugiego pożądanego workera.",
+                        "Ograniczenia sieciowe (lub tryb NAT zamiast Bridged) sprawiły, że nie widać z zewnątrz demona SSH lub jego port został zablokowany z braku połączenia między powłokami IP.",
+                        "Wszystkie z podanych powyżej błędów mogą bezpośrednio i logicznie wpłynąć na zaprzestanie wysyłania komend procesu."
+                    ],
+                    "values": [true, true, true, true]
+                },
+                {
+                    "question": "W jaki sposób MPI przesyła dane podczas obliczeń wysokowydajnych?",
+                    "answers": [
+                        "W obrębie procesów znajdujących się w obrębie struktury tego samego, jednego fizycznego węzła operuje bezpośrednio na wspólnej dla nich przestrzeni pamięci komputera.",
+                        "W przypadku transportowania wielkiej macierzy informacji na proces zlokalizowany na innym, osobnym węźle (worker), MPI odwołuje się i nawiązuje standardowy protokół sieciowy po warstwie TCP.",
+                        "Wymienia asynchronicznie wiadomości korzystając głównie ze strumieniowania protokołem UDP ze względu na brak potrzeby weryfikacji docierania małych pakietów w architekturach klastrowych.",
+                        "Zrzuca informacje wymienne do ukrytego, zduplikowanego pliku w zamontowanym katalogu NFS, a węzeł docelowy pobiera stamtąd zmienne powołując się na system i/o dysku."
+                    ],
+                    "values": [true, true, false, false]
+                }
+            ]
+        },
+        {
             "name": "LIN Kernel (LINUX)",
             "questions": [
                 {
