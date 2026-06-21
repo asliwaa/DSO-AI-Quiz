@@ -1,4 +1,4 @@
-// BAZA DANYCH PYTAŃ - KATEGORIA POWERSHELL Z PLIKU PDF
+// BAZA DANYCH PYTAŃ
 const db = {
     "categories": [
         {
@@ -203,76 +203,201 @@ const db = {
                         "Jest to niepoprawna składnia."
                     ],
                     "values": [true, false, false, false]
-                },
+                }
+            ]
+        },
+        {
+            "name": "Zarządzanie przestrzenią dyskową (RAID Windows/Linux)",
+            "questions": [
                 {
-                    "question": "Aby usunąć wszystkie pliki z katalogu c:\\temp\\ o rozszerzeniu .xls w Windows PowerShell należy użyć polecenia:",
+                    "question": "Na komputerze posiadającym 5 dysków ma zostać zainstalowany system operacyjny Windows 2008 Server, który powinien zapewnić pracę z minimalnym prawdopodobieństwem utraty danych oraz łatwą administracją dyskami. Jaką konfigurację powinien wybrać administrator zakładając, że nie może użyć macierzy sprzętowych?",
                     "answers": [
-                        "remove-item c:\\temp\\*.xls",
-                        "get-childitem c:\\temp\\*.xls | foreach-object { remove-item $_.fullname }",
-                        "remove-item c:\\temp\\* -exclude *.xls",
-                        "remove-file c:\\temp\\* -extension xls"
-                    ],
-                    "values": [true, true, false, false]
-                },
-                {
-                    "question": "Jakie rozszerzenia mogą mieć skrypty PowerShell?",
-                    "answers": [
-                        ".wps",
-                        ".shl",
-                        ".cmd",
-                        ".ps1"
-                    ],
-                    "values": [false, false, false, true]
-                },
-                {
-                    "question": "Której z niżej wymienionych polityk uruchamiania skryptów są dostępne w PowerShell systemu Windows?",
-                    "answers": [
-                        "NoneAllowed - nie pozwala na uruchamianie żadnych skryptów.",
-                        "AllSigned - możliwość uruchomienia tylko podpisanych skryptów.",
-                        "RemoteSigned - możliwość uruchamiania skryptów lokalnych oraz podpisanych pochodzących z Internetu.",
-                        "Unrestricted - pozwala na uruchamianie wszystkich skryptów."
-                    ],
-                    "values": [false, true, true, true]
-                },
-                {
-                    "question": "Czym charakteryzują się komendy (tzw. cmdlety) w PowerShell?",
-                    "answers": [
-                        "Zazwyczaj zwracają obiekty.",
-                        "Nie mogą mieć zdefiniowanych kilku aliasów jednocześnie.",
-                        "Mają nazwy postaci \"rzeczownik-czasownik\"",
-                        "Mają nazwy postaci \"czasownik-rzeczownik\""
-                    ],
-                    "values": [true, false, false, true]
-                },
-                {
-                    "question": "Aby sprawdzić czy jakiś katalog już istnieje w Windows PowerShell można skorzystać z poleceń:",
-                    "answers": [
-                        "remove-item",
-                        "test-path",
-                        "path",
-                        "new-item"
+                        "wszystkie dyski spięte w mirror",
+                        "2 dyski spięte w mirror, pozostałe 3 dyski spięte w RAID5",
+                        "wszystkie 5 dysków spiętych w RAID5",
+                        "dyski spięte w spanned volume, 2 dyski spięte w mirror"
                     ],
                     "values": [false, true, false, false]
                 },
                 {
-                    "question": "Wskaż wszystkie prawdziwe zdania dotyczące interpretera Windows PowerShell:",
+                    "question": "Maksymalna ilość dysków, które mogą ulec awarii bez utraty danych wynosi:",
                     "answers": [
-                        "Polecenie ls jest aliasem polecenia Get-Children.",
-                        "PowerShell nie posiada modułów i przystawek pozwalających na rozszerzanie powłoki...",
-                        "W systemie operacyjnym Windows XP SP2 domyślnie zainstalowaną wersją PowerShella jest wersja \"PowerShell v2\"",
-                        "PowerShell pozwala na przetwarzanie potokowe, które pozwala na przekazywanie obiektu z jednego cmdletu do drugiego bez parsowania tekstu."
+                        "1, dla 2 dysków pracujących w RAID0",
+                        "1, dla 3 dysków pracujących w RAID5",
+                        "1, dla 2 dysków pracujących w RAID1",
+                        "2, dla 3 dysków pracujących w RAID5"
+                    ],
+                    "values": [false, true, true, false]
+                },
+                {
+                    "question": "RAID:",
+                    "answers": [
+                        "jest stosowane w celu zwiększenia niezawodności",
+                        "wymaga minimum 3 dysków fizycznych do pracy",
+                        "jest stosowane w celu zwiększenia wydajności transmisji danych",
+                        "jest stosowane w celu powiększenia przestrzeni dostępnej jako jedna całość"
+                    ],
+                    "values": [true, false, true, true]
+                },
+                {
+                    "question": "Mirrored volume w systemie Windows 2008 ma następujące właściwości:",
+                    "answers": [
+                        "może chronić wolumen bootowalnego systemu operacyjnego Windows 2008",
+                        "do założenia wymaga 2 identycznych partycji na dyskach typu \"basic disk\"",
+                        "można go utworzyć na 2 dyskach",
+                        "wymaga zakupienia specjalnego kontrolera dysków"
+                    ],
+                    "values": [true, false, true, false]
+                },
+                {
+                    "question": "Które z poniższych zdań na temat macierzy RAID5 są prawdziwe?",
+                    "answers": [
+                        "RAID5 działa poprawnie do awarii więcej niż jednego dysku",
+                        "Macierz RAID5 wymaga minimum 4 dysków",
+                        "W n-dyskowej macierzy bity parzystości są na n-1 dyskach",
+                        "Macierz złożona z n jednakowych dysków ma objętość n-1 dysków"
                     ],
                     "values": [false, false, false, true]
                 },
                 {
-                    "question": "Polecenie: `new-item c:\\temp\\test -type directory` spowoduje:",
+                    "question": "Dla których wolumenów prawdopodobieństwo utraty danych jest większe niż dla wolumenu prostego (simple volume):",
                     "answers": [
-                        "Utworzenie katalogu directory w katalogu c:\\temp\\test",
-                        "Sprawdzi istnienie katalogu test w katalogu c:\\temp",
-                        "Utworzenie katalogu test w katalogu c:\\temp",
-                        "Sprawdzi czy \"test\" w katalogu c:\\temp jest katalogiem"
+                        "spanned volume",
+                        "striped volume",
+                        "RAID5",
+                        "mirrored volume"
                     ],
-                    "values": [false, false, true, false]
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Zaznacz poprawne stwierdzenia dotyczące dysków podstawowych i dynamicznych w systemach Windows:",
+                    "answers": [
+                        "Dyski podstawowe posiadają te same możliwości i funkcje co dyski dynamiczne jednak ich konfiguracja jest nieco trudniejsza",
+                        "Dyski dynamiczne dostępne są tylko w systemach windows z rodziny serwer",
+                        "Dyski podstawowe pozwalają na tworzenie podstawowych partycji, rozszerzonych partycji oraz dysków logicznych",
+                        "W niektórych wersjach systemu windows istnieje możliwość scalenia kilku oddzielnych dynamicznych dysków w jeden wolumen dynamiczny"
+                    ],
+                    "values": [false, false, true, true]
+                },
+                {
+                    "question": "Które konfiguracje RAID zwiększają wydajność (gdzie wzrost wydajności należy zrozumieć jako wzrost prędkości odczytu i zapisu)?",
+                    "answers": [
+                        "RAID0",
+                        "RAID0+1",
+                        "RAID1+0",
+                        "RAID1"
+                    ],
+                    "values": [true, true, true, false]
+                },
+                {
+                    "question": "W systemie Windows 7 na 5 dyskach za pomocą systemu operacyjnego został założony RAID5. Po pewnym czasie podczas pracy systemu 1 dysk uległ uszkodzeniu.",
+                    "answers": [
+                        "odzyskiwanie danych będzie możliwe tylko z ostatniej archiwizacji",
+                        "jeśli uszkodzony dysk zostanie wymieniony na nowy to po ponownym uruchomieniu systemu dane zostaną automatycznie odzyskane",
+                        "danych nie będzie można odzyskać",
+                        "w systemie Windows 7 nie można użyć RAID5"
+                    ],
+                    "values": [false, false, false, true]
+                },
+                {
+                    "question": "Macierz typu raid 5 złożona z 3 dysków o jednakowej pojemności i parametrach:",
+                    "answers": [
+                        "ma pojemność 2 dysków i nie jest odporna na awarię ani jednego dysku",
+                        "oferuje spowolniony odczyt w przypadku awarii 1 dysku",
+                        "ma pojemność 1 dysku i jest odporna na awarię maksymalnie 2 dysków",
+                        "ma pojemność 2 dysków i jest odporna na awarię maksymalnie 1 dysku"
+                    ],
+                    "values": [false, true, false, true]
+                },
+                {
+                    "question": "Zaznacz prawdziwe stwierdzenia:",
+                    "answers": [
+                        "Sprzętowy RAID oferuje większą wydajność poprzez zmniejszenie obciążenia CPU, gdyż przeliczaniem sum kontrolnych zajmuje się wówczas dedykowany kontroler.",
+                        "RAID sprzętowy jest niekompatybilny z dużą liczbą systemów operacyjnych, ze względu na zachowanie odróżniające taki RAID od pojedynczego dysku twardego.",
+                        "RAID software'owy oferuje możliwość łączenia różnych interfejsów takich jak ATA, SCSI, SATA, USB w obrębie jednej macierzy.",
+                        "Dla takich samych dysków RAID 6 oferuje większą szybkość zapisu niż RAID 0."
+                    ],
+                    "values": [true, true, true, false]
+                },
+                {
+                    "question": "Zaznacz cele zastosowania macierzy RAID:",
+                    "answers": [
+                        "Zwiększenie odporności na awarie",
+                        "Zwiększenie wydajności transmisji danych",
+                        "Powiększenie przestrzeni dyskowej, dostępnej jako jedna całość",
+                        "Dwukrotne zwiększenie całkowitej przestrzeni dyskowej"
+                    ],
+                    "values": [true, true, true, false]
+                },
+                {
+                    "question": "System Linux pozwala na:",
+                    "answers": [
+                        "Tworzenie programowych macierzy RAID.",
+                        "Tworzenie wolumenów liniowych.",
+                        "Tworzenie partycji za pomocą polecenia \"create\"",
+                        "Tworzenie macierzy RAID 5."
+                    ],
+                    "values": [true, true, false, true]
+                },
+                {
+                    "question": "Za pomocą polecenia mdadm można:",
+                    "answers": [
+                        "utworzyć wolumin liniowy",
+                        "Sformatować partycję",
+                        "Sprawdzić konfigurację macierzy",
+                        "Zasymulować awarię woluminu"
+                    ],
+                    "values": [true, false, true, true]
+                },
+                {
+                    "question": "Wskaż poprawne zdania dotyczące RAID.",
+                    "answers": [
+                        "Polecenie mdadm -C -v /dev/md0 --level=0 -n 2 /dev/sda1 /dev/sdb1 służy do stworzenia wolumenu liniowego na partycjach sda1 i sdb1.",
+                        "Polecenie mdadm -C -v /dev/md0 --level=1 -n 2 /dev/sda1 /dev/sdb1 służy do stworzenia mirroru.",
+                        "Polecenie mkfs -t ext3 /dev/md0 służy do sformatowania urządzenia.",
+                        "Wolumenu liniowego /dev/md0 nie można dodać do pliku /etc/fstab, aby była montowana przy starcie systemu operacyjnego."
+                    ],
+                    "values": [false, true, true, false]
+                },
+                {
+                    "question": "Wskaż poprawne odpowiedzi dotyczące RAID5:",
+                    "answers": [
+                        "Umożliwia odzyskanie danych w razie awarii jednego z dysków",
+                        "Składa się z minimum 2 dysków",
+                        "Odzyskiwanie danych w razie awarii odbywa się przy wykorzystaniu danych i kodów korekcyjnych zapisanych na jednym, specjalnie do tego przeznaczonym dysku",
+                        "W przypadku awarii dysku dostęp do danych jest spowolniony"
+                    ],
+                    "values": [true, false, false, true]
+                },
+                {
+                    "question": "Wskaż poprawne odpowiedzi dotyczące mirroring-u:",
+                    "answers": [
+                        "Polega na zapisywaniu tych samych danych na dwóch lub więcej dyskach jednocześnie",
+                        "W przypadku awarii co najmniej połowy z dysków nie ma możliwości odzyskania wszystkich danych",
+                        "Dostępna przestrzeń ma rozmiar najmniejszego nośnika",
+                        "Czas równoległego zapisu jest równy czasowi zapisu na najwolniejszym dysku"
+                    ],
+                    "values": [true, false, true, true]
+                },
+                {
+                    "question": "Macierz RAID 5 charakteryzuje się:",
+                    "answers": [
+                        "Zastosowaniem minimum 2 dysków",
+                        "Zastosowaniem minimum 3 dysków",
+                        "Odpornością na awarię dwóch dysków",
+                        "Zmniejszoną szybkością zapisu"
+                    ],
+                    "values": [false, true, false, true]
+                },
+                {
+                    "question": "Cztery dyski twarde o rozmiarach 200GB, 200GB, 150GB, 150GB połączono w macierz typu striped volume:",
+                    "answers": [
+                        "Macierz taka jest bardziej odporna na awarie niż pojedynczy dysk",
+                        "Sumaryczna szybkość takiej macierzy jest 4-krotnością szybkości najwolniejszego z dysków",
+                        "Macierz jest widziana w systemie jako pojedynczy dysk logiczny o rozmiarze 700GB",
+                        "Prawdopodobieństwo utraty danych jest większe niż dla analogicznej macierzy RAID 1"
+                    ],
+                    "values": [false, true, false, true]
                 }
             ]
         }
