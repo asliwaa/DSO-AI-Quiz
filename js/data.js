@@ -780,774 +780,444 @@ const db = {
             "name": "Zarządzanie przestrzenią dyskową (RAID Windows/Linux)",
             "questions": [
                 {
-                    "question": "Na komputerze posiadającym 5 dysków ma zostać zainstalowany system operacyjny Windows 2008 Server, który powinien zapewnić pracę z minimalnym prawdopodobieństwem utraty danych oraz łatwą administracją dyskami. Jaką konfigurację powinien wybrać administrator zakładając, że nie może użyć macierzy sprzętowych?",
+                    "question": "Z jakich trzech podstawowych warstw/elementów składa się architektura przestrzeni LVM (Logical Volume Manager)?",
                     "answers": [
-                        "wszystkie dyski spięte w mirror",
-                        "2 dyski spięte w mirror, pozostałe 3 dyski spięte w RAID5",
-                        "wszystkie 5 dysków spiętych w RAID5",
-                        "dyski spięte w spanned volume, 2 dyski spięte w mirror"
+                        "PV (Physical Volume) - fizyczne nośniki zainicjalizowane do użytku LVM.",
+                        "VG (Volume Group) - grupa wolumenów łącząca nośniki fizyczne w jedną pulę.",
+                        "LV (Logical Volume) - wolumeny logiczne, z których na końcu korzysta system plików.",
+                        "DP (Dynamic Partition) - partycje dynamiczne odpowiedzialne za alokację systemu operacyjnego."
                     ],
-                    "values": [false, true, false, false]
+                    "values": [true, true, true, false]
                 },
                 {
-                    "question": "Maksymalna ilość dysków, które mogą ulec awarii bez utraty danych wynosi:",
+                    "question": "Za pomocą jakiego polecenia prawidłowo zainicjujesz dwa nowo podłączone dyski (/dev/sdc i /dev/sdd), aby mogły być zintegrowane jako fizyczne wolumeny LVM?",
                     "answers": [
-                        "1, dla 2 dysków pracujących w RAID0",
-                        "1, dla 3 dysków pracujących w RAID5",
-                        "1, dla 2 dysków pracujących w RAID1",
-                        "2, dla 3 dysków pracujących w RAID5"
+                        "sudo pvcreate /dev/sdc /dev/sdd",
+                        "sudo pvinit /dev/sdc /dev/sdd",
+                        "sudo create-pv /dev/sdc /dev/sdd",
+                        "sudo lvm-init --disk /dev/sdc /dev/sdd"
                     ],
-                    "values": [false, true, true, false]
+                    "values": [true, false, false, false]
                 },
                 {
-                    "question": "RAID:",
+                    "question": "Zgodnie z instrukcją laboratoryjną, jaka jest poprawna składnia polecenia powołującego do życia Grupę Wolumenów (VG) o nazwie 'lab_vg' obejmującą dyski '/dev/sdc' i '/dev/sdd'?",
                     "answers": [
-                        "jest stosowane w celu zwiększenia niezawodności",
-                        "wymaga minimum 3 dysków fizycznych do pracy",
-                        "jest stosowane w celu zwiększenia wydajności transmisji danych",
-                        "jest stosowane w celu powiększenia przestrzeni dostępnej jako jedna całość"
+                        "sudo vgcreate lab_vg /dev/sdc /dev/sdd",
+                        "sudo vgcreate /dev/sdc /dev/sdd lab_vg",
+                        "sudo make-vg -name lab_vg /dev/sdc /dev/sdd",
+                        "sudo vgadd lab_vg /dev/sdc /dev/sdd"
                     ],
-                    "values": [true, false, true, true]
+                    "values": [true, false, false, false]
                 },
                 {
-                    "question": "Mirrored volume w systemie Windows 2008 ma następujące właściwości:",
+                    "question": "Chcesz utworzyć docelowy wolumen logiczny (LV) o nazwie 'lab_lv' i ustalonym rozmiarze 12 GB wewnątrz istniejącej puli 'lab_vg'. Wskaż bezbłędne polecenie:",
                     "answers": [
-                        "może chronić wolumen bootowalnego systemu operacyjnego Windows 2008",
-                        "do założenia wymaga 2 identycznych partycji na dyskach typu \"basic disk\"",
-                        "można go utworzyć na 2 dyskach",
-                        "wymaga zakupienia specjalnego kontrolera dysków"
+                        "sudo lvcreate -L 12G -n lab_lv lab_vg",
+                        "sudo lvcreate -l 12G -name lab_lv lab_vg",
+                        "sudo lvcreate -size 12G -lv lab_lv lab_vg",
+                        "sudo create-lv lab_vg lab_lv 12G"
                     ],
-                    "values": [true, false, true, false]
+                    "values": [true, false, false, false]
                 },
                 {
-                    "question": "Które z poniższych zdań na temat macierzy RAID5 są prawdziwe?",
+                    "question": "Po pomyślnym utworzeniu wolumenu logicznego '/dev/lab_vg/lab_lv', należy przygotować go do zapisu i połączyć z drzewem katalogów. Jakie polecenia posłużą do tego w środowisku Linux?",
                     "answers": [
-                        "RAID5 działa poprawnie do awarii więcej niż jednego dysku",
-                        "Macierz RAID5 wymaga minimum 4 dysków",
-                        "W n-dyskowej macierzy bity parzystości są na n-1 dyskach",
-                        "Macierz złożona z n jednakowych dysków ma objętość n-1 dysków"
-                    ],
-                    "values": [false, false, false, true]
-                },
-                {
-                    "question": "Dla których wolumenów prawdopodobieństwo utraty danych jest większe niż dla wolumenu prostego (simple volume):",
-                    "answers": [
-                        "spanned volume",
-                        "striped volume",
-                        "RAID5",
-                        "mirrored volume"
+                        "sudo mkfs.ext4 /dev/lab_vg/lab_lv",
+                        "sudo mount /dev/lab_vg/lab_lv /mnt/lab_data",
+                        "sudo format.ext4 /dev/lab_vg/lab_lv",
+                        "sudo mount /mnt/lab_data /dev/lab_vg/lab_lv"
                     ],
                     "values": [true, true, false, false]
                 },
                 {
-                    "question": "Zaznacz poprawne stwierdzenia dotyczące dysków podstawowych i dynamicznych w systemach Windows:",
+                    "question": "Powiększyłeś wolumen logiczny 'lab_lv' sprzętowo poprzez opcję `-L +2G`. Dlaczego zaraz potem niezbędne jest wykonanie polecenia np. `resize2fs /dev/lab_vg/lab_lv`?",
                     "answers": [
-                        "Dyski podstawowe posiadają te same możliwości i funkcje co dyski dynamiczne jednak ich konfiguracja jest nieco trudniejsza",
-                        "Dyski dynamiczne dostępne są tylko w systemach windows z rodziny serwer",
-                        "Dyski podstawowe pozwalają na tworzenie podstawowych partycji, rozszerzonych partycji oraz dysków logicznych",
-                        "W niektórych wersjach systemu windows istnieje możliwość scalenia kilku oddzielnych dynamicznych dysków w jeden wolumen dynamiczny"
-                    ],
-                    "values": [false, false, true, true]
-                },
-                {
-                    "question": "Które konfiguracje RAID zwiększają wydajność (gdzie wzrost wydajności należy zrozumieć jako wzrost prędkości odczytu i zapisu)?",
-                    "answers": [
-                        "RAID0",
-                        "RAID0+1",
-                        "RAID1+0",
-                        "RAID1"
-                    ],
-                    "values": [true, true, true, false]
-                },
-                {
-                    "question": "W systemie Windows 7 na 5 dyskach za pomocą systemu operacyjnego został założony RAID5. Po pewnym czasie podczas pracy systemu 1 dysk uległ uszkodzeniu.",
-                    "answers": [
-                        "odzyskiwanie danych będzie możliwe tylko z ostatniej archiwizacji",
-                        "jeśli uszkodzony dysk zostanie wymieniony na nowy to po ponownym uruchomieniu systemu dane zostaną automatycznie odzyskane",
-                        "danych nie będzie można odzyskać",
-                        "w systemie Windows 7 nie można użyć RAID5"
-                    ],
-                    "values": [false, false, false, true]
-                },
-                {
-                    "question": "Macierz typu raid 5 złożona z 3 dysków o jednakowej pojemności i parametrach:",
-                    "answers": [
-                        "ma pojemność 2 dysków i nie jest odporna na awarię ani jednego dysku",
-                        "oferuje spowolniony odczyt w przypadku awarii 1 dysku",
-                        "ma pojemność 1 dysku i jest odporna na awarię maksymalnie 2 dysków",
-                        "ma pojemność 2 dysków i jest odporna na awarię maksymalnie 1 dysku"
-                    ],
-                    "values": [false, true, false, true]
-                },
-                {
-                    "question": "Zaznacz prawdziwe stwierdzenia:",
-                    "answers": [
-                        "Sprzętowy RAID oferuje większą wydajność poprzez zmniejszenie obciążenia CPU, gdyż przeliczaniem sum kontrolnych zajmuje się wówczas dedykowany kontroler.",
-                        "RAID sprzętowy jest niekompatybilny z dużą liczbą systemów operacyjnych, ze względu na zachowanie odróżniające taki RAID od pojedynczego dysku twardego.",
-                        "RAID software'owy oferuje możliwość łączenia różnych interfejsów takich jak ATA, SCSI, SATA, USB w obrębie jednej macierzy.",
-                        "Dla takich samych dysków RAID 6 oferuje większą szybkość zapisu niż RAID 0."
-                    ],
-                    "values": [true, true, true, false]
-                },
-                {
-                    "question": "Zaznacz cele zastosowania macierzy RAID:",
-                    "answers": [
-                        "Zwiększenie odporności na awarie",
-                        "Zwiększenie wydajności transmisji danych",
-                        "Powiększenie przestrzeni dyskowej, dostępnej jako jedna całość",
-                        "Dwukrotne zwiększenie całkowitej przestrzeni dyskowej"
-                    ],
-                    "values": [true, true, true, false]
-                },
-                {
-                    "question": "System Linux pozwala na:",
-                    "answers": [
-                        "Tworzenie programowych macierzy RAID.",
-                        "Tworzenie wolumenów liniowych.",
-                        "Tworzenie partycji za pomocą polecenia \"create\"",
-                        "Tworzenie macierzy RAID 5."
-                    ],
-                    "values": [true, true, false, true]
-                },
-                {
-                    "question": "Za pomocą polecenia mdadm można:",
-                    "answers": [
-                        "utworzyć wolumin liniowy",
-                        "Sformatować partycję",
-                        "Sprawdzić konfigurację macierzy",
-                        "Zasymulować awarię woluminu"
-                    ],
-                    "values": [true, false, true, true]
-                },
-                {
-                    "question": "Wskaż poprawne zdania dotyczące RAID.",
-                    "answers": [
-                        "Polecenie mdadm -C -v /dev/md0 --level=0 -n 2 /dev/sda1 /dev/sdb1 służy do stworzenia wolumenu liniowego na partycjach sda1 i sdb1.",
-                        "Polecenie mdadm -C -v /dev/md0 --level=1 -n 2 /dev/sda1 /dev/sdb1 służy do stworzenia mirroru.",
-                        "Polecenie mkfs -t ext3 /dev/md0 służy do sformatowania urządzenia.",
-                        "Wolumenu liniowego /dev/md0 nie można dodać do pliku /etc/fstab, aby była montowana przy starcie systemu operacyjnego."
-                    ],
-                    "values": [false, true, true, false]
-                },
-                {
-                    "question": "Wskaż poprawne odpowiedzi dotyczące RAID5:",
-                    "answers": [
-                        "Umożliwia odzyskanie danych w razie awarii jednego z dysków",
-                        "Składa się z minimum 2 dysków",
-                        "Odzyskiwanie danych w razie awarii odbywa się przy wykorzystaniu danych i kodów korekcyjnych zapisanych na jednym, specjalnie do tego przeznaczonym dysku",
-                        "W przypadku awarii dysku dostęp do danych jest spowolniony"
-                    ],
-                    "values": [true, false, false, true]
-                },
-                {
-                    "question": "Wskaż poprawne odpowiedzi dotyczące mirroring-u:",
-                    "answers": [
-                        "Polega na zapisywaniu tych samych danych na dwóch lub więcej dyskach jednocześnie",
-                        "W przypadku awarii co najmniej połowy z dysków nie ma możliwości odzyskania wszystkich danych",
-                        "Dostępna przestrzeń ma rozmiar najmniejszego nośnika",
-                        "Czas równoległego zapisu jest równy czasowi zapisu na najwolniejszym dysku"
-                    ],
-                    "values": [true, false, true, true]
-                },
-                {
-                    "question": "Macierz RAID 5 charakteryzuje się:",
-                    "answers": [
-                        "Zastosowaniem minimum 2 dysków",
-                        "Zastosowaniem minimum 3 dysków",
-                        "Odpornością na awarię dwóch dysków",
-                        "Zmniejszoną szybkością zapisu"
-                    ],
-                    "values": [false, true, false, true]
-                },
-                {
-                    "question": "Cztery dyski twarde o rozmiarach 200GB, 200GB, 150GB, 150GB połączono w macierz typu striped volume:",
-                    "answers": [
-                        "Macierz taka jest bardziej odporna na awarie niż pojedynczy dysk",
-                        "Sumaryczna szybkość takiej macierzy jest 4-krotnością szybkości najwolniejszego z dysków",
-                        "Macierz jest widziana w systemie jako pojedynczy dysk logiczny o rozmiarze 700GB",
-                        "Prawdopodobieństwo utraty danych jest większe niż dla analogicznej macierzy RAID 1"
-                    ],
-                    "values": [false, true, false, true]
-                },
-                {
-                    "question": "Aby wykorzystać programowy RAID5 w systemie Windows 2008 Serwer należy posiadać komputer z zainstalowanymi",
-                    "answers": [
-                        "trzema dyskami",
-                        "trzema dyskami oraz kontrolerem umożliwiającym systemowi Windows 2008 Server utworzenie programowej macierzy RAID5",
-                        "czterema dyskami",
-                        "pięcioma dyskami"
+                        "Ponieważ 'lvextend' rozszerza jedynie dostępną wielkość blokowego nośnika na poziomie LVM, a 'resize2fs' instruuje system plików (ext4), aby ten nośnik wypełnił i zaczął z niego korzystać.",
+                        "Bez tego polecenia stary dysk zostanie automatycznie sformatowany ze względu na uszkodzenie tzw. tablicy MBR wolumenu logicznego.",
+                        "Jest to proces de-fragmentacji nowej przestrzeni dyskowej przypisanej do działającego na żywo systemu plików.",
+                        "Ponieważ LVM wymaga manualnego przepisania metadanych LVM z pomocą programu resize po każdym przesunięciu fizycznych sektorów RAMu."
                     ],
                     "values": [true, false, false, false]
                 },
                 {
-                    "question": "Na ilu dyskach można założyć wolumen paskowany używając systemu operacyjnego Windows 2008?",
+                    "question": "Na jakiej zasadzie opierają się migawki (Snapshots) wykonywane z poziomu zarządzania LVM?",
                     "answers": [
-                        "na 1",
-                        "na 2",
-                        "na 3",
-                        "na 4"
-                    ],
-                    "values": [false, true, true, true]
-                },
-                {
-                    "question": "Na komputerze posiadającym 6 dysków zostanie zainstalowany system operacyjny Windows 2008 Server. Która konfiguracja pozwoli na pracę z najlepszym wykorzystaniem przestrzeni na dyskach zakładając, że nie można użyć macierzy sprzętowych?",
-                    "answers": [
-                        "2 dyski spięte w mirror, 3 dyski spięte w RAID5",
-                        "2 dyski spięte w mirror, pozostałe 4 dyski spięte w wolumen paskowany",
-                        "wszystkie 6 dysków spiętych w RAID5",
-                        "utworzone 3 mirrory po 2 dyski każdy"
-                    ],
-                    "values": [false, true, false, false]
-                },
-                {
-                    "question": "Na ilu dyskach można założyć wolumen paskowany używając systemu operacyjnego Windows 7?",
-                    "answers": [
-                        "na 1",
-                        "na 2",
-                        "na 3",
-                        "na 5"
-                    ],
-                    "values": [false, true, true, true]
-                },
-                {
-                    "question": "Na komputerze posiadającym 3 dyski zostanie zainstalowany system operacyjny Windows 2008 Server. Która konfiguracja pozwoli na pracę z najlepszym wykorzystaniem przestrzeni na dyskach zakładając, że nie można użyć macierzy sprzętowych?",
-                    "answers": [
-                        "2 dyski spięte w mirror, jeden dysk bez zabezpieczeń",
-                        "3 dyski spięte w spanned volume",
-                        "wszystkie 3 dyski spięte w RAID5",
-                        "wszystkie dyski spięte w mirror"
-                    ],
-                    "values": [true, false, false, false]
-                },
-                {
-                    "question": "Konfiguracja RAID0:",
-                    "answers": [
-                        "Pojemność wszystkich połączonych dysków jest równa N* pojemność najmniejszego dysku, gdzie N to liczba połączonych dysków.",
-                        "Nie dostarcza żadnego zabezpieczenia danych.",
-                        "Znajduje idealne zastosowanie gdzie wydajność jest ważniejsza od bezpieczeństaw danych.",
-                        "Pojemność wszystkich połączonych dysków jest równa pojemności najmniejszego z nich."
-                    ],
-                    "values": [true, true, true, false]
-                },
-                {
-                    "question": "Jakie są dostępne typy dysków dynamicznych w systemie Windows 2003?",
-                    "answers": [
-                        "Mirror",
-                        "Spanned Volume",
-                        "Stripped Volume",
-                        "Simple Volume"
-                    ],
-                    "values": [true, true, true, true]
-                },
-                {
-                    "question": "W konfiguracji RAID1:",
-                    "answers": [
-                        "Dane zapisywane są na obu dyskach równocześnie.",
-                        "Dane są zapisywane na kolejnych dyskach bit po bicie, tak jak w przypadku RAID2.",
-                        "Efektywna pojemność wynosi 50% pojemności dysków.",
-                        "Wykorzystuje paskowanie dysków."
-                    ],
-                    "values": [true, false, true, false]
-                },
-                {
-                    "question": "Które z poniższych zdań opisują macierz RAID1 (mirroring)?",
-                    "answers": [
-                        "RAID1 oferuje możliwość strippingu danych.",
-                        "Calkowita pojemność danych macierzy jest równa pojemności największego dysku.",
-                        "Pojemność macierzy jest równa pojemności najmniejszego dysku pomnożonego przez liczbę dysków.",
-                        "Odporność na awarię N-1 dysków w N-dyskowej macierzy."
-                    ],
-                    "values": [false, false, false, true]
-                },
-                {
-                    "question": "W przypadku którego typu konfiguracji dysków istnieje możliwość odzyskania danych jeśli jeden z dysków macierzy ulegnie awarii?",
-                    "answers": [
-                        "konfiguracja typu stripped volume",
-                        "konfiguracja typu RAID5",
-                        "konfiguracja typu mirror",
-                        "konfiguracja typu spanned volume"
-                    ],
-                    "values": [false, true, true, false]
-                },
-                {
-                    "question": "Mirrored volume w systemie Windows 2008 ma następujące właściwości:",
-                    "answers": [
-                        "może chronić wolumen z bootowalnym systemem operacyjnym Windows 2008.",
-                        "może obejmować więcej niż 2 dyski.",
-                        "całkowicie likwiduje ryzyko utraty danych.",
-                        "nie można go założyć na dyskach typu \"basic disk\"."
-                    ],
-                    "values": [true, false, false, true]
-                },
-                {
-                    "question": "Który z typów RAID zapewni bezpieczeństwo przy awarii jednego dysku?",
-                    "answers": [
-                        "RAID0+1",
-                        "RAID0",
-                        "RAID1",
-                        "RAID5"
-                    ],
-                    "values": [true, false, true, true]
-                },
-                {
-                    "question": "Wskaż poprawną odpowiedź:",
-                    "answers": [
-                        "Przestrzeń macierzy w RAID0 jest zależna od rozmiaru najmniejszego z użytych dysków.",
-                        "RAID0+1 i RAID1+0 udostępniają 100% sumy pojemności wszystkich użytych dysków.",
-                        "RAID4 to macierz, której dane na dyskach są paskowane.",
-                        "Awaria dwóch dysków w RAID6 nie powoduje utraty danych."
-                    ],
-                    "values": [true, false, true, true]
-                },
-                {
-                    "question": "Programowy RAID5 w systemie Windows 2008 Server:",
-                    "answers": [
-                        "można utworzyć już na 2 dyskach.",
-                        "można utworzyć na 4 dyskach.",
-                        "Zwiększa odporność systemu na awarie dysków.",
-                        "można założyć na dyskach typu \"dynamic\" lub basic."
-                    ],
-                    "values": [false, true, true, false]
-                },
-                {
-                    "question": "Jakie właściwości ma programowy RAID5 w systemie operacyjnym Windows 2008?",
-                    "answers": [
-                        "można go założyć na 5 dyskach.",
-                        "umożliwia lepsze wykorzystanie przestrzeni na dyskach niż wolumen paskowany.",
-                        "zapewnia bezawaryjną pracę systemu.",
-                        "pozwala uniknąć fragmentacji systemu plików."
-                    ],
-                    "values": [true, false, false, false]
-                },
-                {
-                    "question": "Zaznacz zdania prawdziwe:",
-                    "answers": [
-                        "RAID występuje wyłącznie sprzętowy.",
-                        "RAID występuje wyłącznie programowy.",
-                        "RAID występuje zarówno programowy jak i sprzętowy.",
-                        "Nie ma żadnej możliwości uruchomienia RAID w domowym komputerze PC."
-                    ],
-                    "values": [false, false, true, false]
-                },
-                {
-                    "question": "Które z podanych zdań są prawdziwe?",
-                    "answers": [
-                        "RAID programowy pozwala na bezpośredni start systemu z macierzy dyskowej.",
-                        "RAID sprzętowy posiada wyższą wydajność od RAID programowego, gdyż przeliczaniem sum kontrolnych zajmuje się dedykowany kontroler.",
-                        "RAID programowy posiada większą kompatybilność z mniej popularnymi systemami operacyjnymi, gdyż wszystkie systemy operacyjne obsługują technologię RAID.",
-                        "RAID sprzętowy pozwala na bezpośredni start systemu z macierzy dyskowej."
-                    ],
-                    "values": [false, true, false, true]
-                },
-                {
-                    "question": "W systemie windows 2008 na 5 dyskach za pomocą systemu operacyjnego został założony RAID5 Po pewnym czasie podczas pracy systemu 2 dyski uległy uszkodzeniu.",
-                    "answers": [
-                        "jeśli uszkodzone dyski zostaną wymienione na nowe to po ponownym uruchomieniu systemu dane zostaną automatycznie odzyskane",
-                        "odzyskiwanie danych będzie przezroczyste dla użytkowników jeśli dyski są typu hot swap",
-                        "w systemie Windows 2008 nie można użyć RAID5",
-                        "dane będzie można odzyskać tylko z archiwizacji, a nie z RAID5"
-                    ],
-                    "values": [false, false, false, true]
-                },
-                {
-                    "question": "Jakie właściwości ma programowy RAID5 na systemie operacyjnym Windows 2008?",
-                    "answers": [
-                        "można go założyć na pięciu dyskach",
-                        "umożliwia lepsze wykorzystanie przestrzeni na dyskach niż wolumen paskowany",
-                        "zapewnia bezawaryjną pracę systemu",
-                        "pozwala uniknąć fragmentacji systemu plików"
-                    ],
-                    "values": [true, false, false, false]
-                },
-                {
-                    "question": "Konfiguracja RAID2:",
-                    "answers": [
-                        "jest rozszerzeniem architektury RAID0",
-                        "dane są zapisywane na kolejnych dyskach macierzy bit po bicie",
-                        "cechuje się dużą wydajnością przy operacjach odczytu",
-                        "jest często stosowana w macierzach dyskowych"
-                    ],
-                    "values": [false, true, false, false]
-                },
-                {
-                    "question": "Dyski typu podstawowego (ang. basic disks) pozwalają na:",
-                    "answers": [
-                        "oznaczenie partycji jako aktywnej",
-                        "rozszerzenie woluminów prostych (ang. simple volume)",
-                        "tworzenie partycji podstawowej",
-                        "tworzenie woluminów RAID5"
-                    ],
-                    "values": [true, false, true, false]
-                },
-                {
-                    "question": "Dla których wolumenów prawdopodobieństwo utraty danych jest mniejsze niż dla wolumenu łączonego (spanned volume):",
-                    "answers": [
-                        "mirrored volume",
-                        "striped volume",
-                        "simple volume",
-                        "RAID5"
-                    ],
-                    "values": [true, false, true, true]
-                },
-                {
-                    "question": "Jakie właściwości ma programowy RAID5 na systemie operacyjnym Windows 2008?",
-                    "answers": [
-                        "zapewnia bezawaryjną pracę systemu",
-                        "chroni system przed awarią tylko jednego dysku",
-                        "pozwala uniknąć fragmentacji systemu plików",
-                        "umożliwia lepsze wykorzystanie przestrzeni na dyskach niż wolumen paskowany"
-                    ],
-                    "values": [false, true, false, false]
-                },
-                {
-                    "question": "W systemie Ubuntu, zakładając, że pliki blokowe /dev/sdb1 i /dev/sdb2 reprezentują partycje o rozmiarze 50MB, bezpośrednio po utworzeniu woluminu /dev/md0 poleceniem:\n`mdadm -create -verbose /dev/md0 --level linear --raid-devices=2 /dev/sdb1 /dev/sdb2`:",
-                    "answers": [
-                        "wolumin /dev/md0 będzie miał wielkość 100MB",
-                        "wolumin /dev/md0 będzie miał wielkość 50MB",
-                        "wolumin /dev/md0 będzie można zamontować poleceniem mount /dev/md0 /mnt",
-                        "uszkodzenie dokładnie jednego spośród urządzeń /dev/sdb1 oraz /dev/sdb2 może spowodować utratę danych w woluminie /dev/md0"
-                    ],
-                    "values": [true, false, false, true]
-                },
-                {
-                    "question": "RAID5 może składać się z następującej ilości dysków:",
-                    "answers": [
-                        "2",
-                        "3",
-                        "4",
-                        "5"
-                    ],
-                    "values": [false, true, true, true]
-                },
-                {
-                    "question": "RAID inaczej zwanym lustrzanym (mirroringiem) to:",
-                    "answers": [
-                        "RAID1",
-                        "RAID2",
-                        "RAID3",
-                        "RAID5"
-                    ],
-                    "values": [true, false, false, false]
-                },
-                {
-                    "question": "Jakie polecenie pozwoli na rozpoczęcie procedury tworzenia partycji:",
-                    "answers": [
-                        "fdisk /dev/hda",
-                        "mkdir /dev/sda",
-                        "fdisk /dev/sdb",
-                        "mdadd /dev/sdb"
-                    ],
-                    "values": [true, false, true, false]
-                },
-                {
-                    "question": "Jaka ilość dysków jest wystarczająca, aby zastosować RAID 5:",
-                    "answers": [
-                        "1",
-                        "2",
-                        "3",
-                        "4"
-                    ],
-                    "values": [false, false, true, true]
-                },
-                {
-                    "question": "Mając do dyspozycji 3 identyczne dyski twarde można stworzyć macierz RAID w konfiguracji:",
-                    "answers": [
-                        "RAID 0",
-                        "RAID 5",
-                        "RAID 6",
-                        "RAID 10"
+                        "Zapisują one wyłącznie fizyczne zmiany (deltę) wprowadzane na dysku od momentu wykonania migawki, wykorzystując oszczędny mechanizm Copy-on-Write (COW).",
+                        "Zależnie od przyrostu danych, migawki wymagają pewnej dostępnej i przydzielonej wolnej przestrzeni (wewnątrz tej samej grupy VG), która posłuży jako bufor na przechwytywane zmiany.",
+                        "Każdorazowo wykonują dokładną, zduplikowaną bit-po-bicie kopię całego dysku, przez co migawka wolumenu 100 GB zużywa natychmiastowe dodatkowe 100 GB z grupy VG.",
+                        "Migawki utworzone na dyskach LVM są na stałe zablokowane i funkcjonują z prawami 'Read-Only' (Tylko do odczytu), blokując testy wewnątrz nich."
                     ],
                     "values": [true, true, false, false]
                 },
                 {
-                    "question": "Trzy dyski zostały połączone w macierz RAID 0.",
+                    "question": "Według instrukcji laboratoryjnej z LVM, jak poprawnie utworzyć migawkę o nazwie 'snap_lab' dla źródłowego dysku '/dev/lab_vg/lab_lv', ograniczając jej bufor rozmiarowy do 2 GB?",
                     "answers": [
-                        "Łączna przestrzeń dyskowa jest równa sumie przestrzeni, każdego z dysków",
-                        "Łączna przestrzeń dyskowa jest równa potrojonej przestrzeni dyskowej najmniejszego dysku",
-                        "Szybkość jest równa potrojonej szybkości najwolniejszego z dysków",
-                        "Szybkość jest równa szybkości najwolniejszego z dysków"
+                        "sudo lvcreate -L 2G -s -n snap_lab /dev/lab_vg/lab_lv",
+                        "sudo lvcreate -snapshot 2G -name snap_lab /dev/lab_vg/lab_lv",
+                        "sudo snapshot-create -L 2G /dev/lab_vg/lab_lv snap_lab",
+                        "sudo lvs --snapshot 2G -n snap_lab /dev/lab_vg/lab_lv"
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Usunąłeś kluczowy plik z nośnika testowego i chcesz wykorzystać uprzednio wykonaną migawkę 'snap_lab', aby przewrócić stan dysku z przeszłości. Jaka procedura systemowa jest PRAWIDŁOWA?",
+                    "answers": [
+                        "Dysk należy przed odzyskiwaniem odmontować komendą `sudo umount /dev/lab_vg/lab_lv`.",
+                        "Bieżący dysk należy scalić z wykonanym zapisem z przeszłości wpisując `sudo lvconvert --merge /dev/lab_vg/snap_lab`.",
+                        "Należy użyć wbudowanego w jądro skryptu naprawczego `sudo lvrestore --snapshot /dev/lab_vg/snap_lab` i odczekać 5 sekund.",
+                        "Wykonany po przywracaniu plik migawki pozostanie w tablicach, działając jako nieskończony wektor do powrotów systemu (wielokrotne scalanie)."
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Czym szczególnym charakteryzuje się Thin Provisioning, nazywany także architekturą cienkich wolumenów i puli w LVM?",
+                    "answers": [
+                        "Technika ta pozwala na tworzenie logicznych przestrzeni (np. 20GB), które w oczach systemu operacyjnego wydają się ogromne, ale w rzeczywistości używają tylko tylu fizycznych bloków, ile zostało zapisanych (tzw. overcommitting).",
+                        "Domyślnie alokuje z opóźnieniem rzeczywiste bajty w fizycznej puli dopiero wtedy, gdy jakaś aplikacja faktycznie zrzuci swoje dane na nośnik ext4.",
+                        "Zapewnia on 100% obrony przed utratą danych, automatycznie duplikując uszkodzone fragmenty systemu na zewnętrznym serwerze NAS.",
+                        "Rezerwuje on natychmiast całość żądanego miejsca z VG przy samej próbie utworzenia LV, by zaoszczędzić sobie utrudnień związanych z defragmentacją plików użytkownika."
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "W jaki sposób utworzysz środowisko pod tzw. cienki wolumen? Najpierw musisz zbudować odpowiednią pulę Thin Pool, a zaraz potem zdefiniować dla klienta ten wirtualny, cienki rozmiarowo wolumen. Zaznacz poprawne kroki:",
+                    "answers": [
+                        "sudo lvcreate --type thin-pool -L 0.5G -n thin_pool lab_vg",
+                        "sudo lvcreate -V 20G --thin -n lv_thin lab_vg/thin_pool",
+                        "sudo create-thin-pool -L 0.5G -n thin_pool lab_vg",
+                        "sudo lvcreate -L 20G --type thin-volume -n lv_thin lab_vg"
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Z racji overcommitowania dysków w Thin Pool, środowisko może stać się groźne, gdy fizyczne bloki osiągną koniec pojemności puli bazowej. Jakich systemów / komend użyjemy na prezentacji by stale kontrolować tę zajętość?",
+                    "answers": [
+                        "Możemy wylistować status dysków ręcznie wpisując `lvs` opierając się na specjalnych flagach atrybutów: `-o +seg_monitor,lv_size,data_percent`.",
+                        "Upewniając się, że w logach serwera powołany został daemon reagujący na limit pamięci: `dmeventd`.",
+                        "Możemy skorzystać z dedykowanej jednostki systemowej wpisując `sudo systemctl status lvm2-monitor`.",
+                        "Sprawdzając flagę zrzutu dyskowego dedykowanym narzedziem powłoki `sudo thin-stat --monitor lab_vg`."
                     ],
                     "values": [true, true, true, false]
                 },
                 {
-                    "question": "Administrator podłączył do komputera dwa dyski twarde o pojemności 200GB każdy i połączył je w macierz RAID 1. Do komputera nie zostały podłączone żadne inne dyski. Które z poniższych twierdzeń są prawidłowe?",
+                    "question": "Jeśli na ćwiczeniach przydzieliliśmy 500 MB fizycznego miejsca dla cienkiej puli (thin_pool), a udajemy, że oddajemy klientowi wirtualny dysk cienki na 20 GB (lv_thin) i nagle zaczniemy bez litości wciskać tam 600 MB zer (`dd if=/dev/zero ...`), to co się stanie?",
                     "answers": [
-                        "Całkowita pojemność partycji dostępnych w systemie nie przekracza 200GB.",
-                        "Rozwiązanie takie zapewnia o wiele większą prędkość odczytu i zapisu danych niż macierz RAID 0.",
-                        "Rozwiązanie takie zapewnia o wiele większe bezpieczeństwo danych niż macierz RAID 0.",
-                        "W przypadku awarii jednego dysku użytkownik straci wszystkie swoje dane"
-                    ],
-                    "values": [true, false, true, false]
-                },
-                {
-                    "question": "Zaznacz zdania prawdziwe dotyczące sprzętowej macierzy RAID:",
-                    "answers": [
-                        "Macierz jest zupełnie przezroczysta, przez co z punktu widzenia Systemu Operacyjnego zachowuje się ona jak każdy inny dysk twardy",
-                        "mniejsza wydajność poprzez zwiększenie obciążenia CPU",
-                        "Minimalna liczba dysków potrzebna do stworzenia macierzy to 2",
-                        "Sprzętowa macierz RAID zawsze umożliwia przywrócenie danych w razie awarii jednego z dysków"
-                    ],
-                    "values": [true, false, true, false]
-                },
-                {
-                    "question": "Zaznacz zdania prawdziwe dotyczące programowej macierzy RAID:",
-                    "answers": [
-                        "Macierz jest zupełnie przezroczysta, przez co z punktu widzenia Systemu Operacyjnego zachowuje się ona jak każdy inny dysk twardy",
-                        "mniejsza wydajność poprzez zwiększenie obciążenia CPU",
-                        "Minimalna liczba dysków potrzebna do stworzenia macierzy to 2",
-                        "Programowa macierz RAID zawsze umożliwia przywrócenie danych w razie awarii jednego z dysków"
-                    ],
-                    "values": [false, true, true, false]
-                },
-                {
-                    "question": "Woluminy liniowe w katalogu dev oznaczone są jako:",
-                    "answers": [
-                        "md0, md1...",
-                        "ma0, ma1, ... mb0, mb1...",
-                        "raid0, raid1,...",
-                        "rda0, rda1...., rdb0, rdb1...."
-                    ],
-                    "values": [true, false, false, false]
-                },
-                {
-                    "question": "Która z aplikacji umożliwia stworzenie partycji na twardym dysku?",
-                    "answers": [
-                        "/etc/fstab",
-                        "/sbin/fdisk",
-                        "/sbin/cfdisk",
-                        "/etc/mtab"
-                    ],
-                    "values": [false, true, true, false]
-                },
-                {
-                    "question": "Które z wymienionych rodzajów macierzy RAID zapewniają mirroring:",
-                    "answers": [
-                        "RAID 0",
-                        "RAID 1",
-                        "RAID 5",
-                        "RAID 10"
-                    ],
-                    "values": [false, true, false, true]
-                },
-                {
-                    "question": "Które z wymienionych poleceń umożliwia zarządzanie macierzami RAID w systemie GNU/Linux:",
-                    "answers": [
-                        "hdparm",
-                        "mdadm",
-                        "fdisk",
-                        "parted"
-                    ],
-                    "values": [false, true, false, false]
-                },
-                {
-                    "question": "Celem wyłączenia automatycznego montowania urządzenia cdrom w systemie Linux należy:",
-                    "answers": [
-                        "Odpowiednio zmodyfikować plik '/etc/fstab'.",
-                        "Wykonać polecenie 'nmount -n cdrom'.",
-                        "Wykonać polecenie 'nmount cdrom'.",
-                        "Odpowiednio zmodyfikować plik /etc/amount."
-                    ],
-                    "values": [true, false, false, false]
-                },
-                {
-                    "question": "Polecenie 'fdisk' w systemie Linux można wykorzystać do:",
-                    "answers": [
-                        "tworzenia partycji.",
-                        "wypisania informacji o dysku.",
-                        "montowania dysku.",
-                        "tworzenia kopii zapasowej danych."
+                        "System napotka na fizyczny limit wyczerpania małej puli; dalsze zapisy do Thin Volume nagle padną, wyrzucając z okna terminala najprawdopodobniej klasyczny błąd wejścia-wyjścia (I/O) i psując pliki.",
+                        "W metadanych ukazanych po wywołaniu polecenia `lvs`, kolumna parametru zajętości `Data%` osiągnie równe, krytyczne 100%.",
+                        "Dzięki specyfikacji LVM, dysk potajemnie oddeleguje część pliku do ukrytych RAMdisków chroniąc tablice systemu w trybie awaryjnym (kernel protection mode).",
+                        "Komenda `dd` wykasuje poprzednio wgrane 100MB zapętlając wskaźnik danych tak, jak działa to na kołowych monitorach wejścia (ring-buffers)."
                     ],
                     "values": [true, true, false, false]
                 },
                 {
-                    "question": "Wskaż poprawne zdania dotyczące RAID5 w systemie Linux:",
+                    "question": "Z analizy na prezentacji porównującej fdisk do architektury wolumenów, LVM wyróżnia się i góruje pewnymi nieocenionymi przewagami jako warstwa zarządzania nad systemem partycji:",
                     "answers": [
-                        "Do utworzenia RAID5 potrzebne są co najmniej dwie partycje.",
-                        "Do utworzenia RAID5 można użyć maksymalnie trzech partycji.",
-                        "Do odtworzenia danych z uszkodzonej partycji zawsze wykorzystywana jest jedna, specjalnie do tego przygotowanej partycja.",
-                        "RAID5 jest całkowicie odporny na uszkodzenie jednej partycji (dane można w pełni odtworzyć)."
-                    ],
-                    "values": [false, false, false, true]
-                },
-                {
-                    "question": "Wskaż poprawne zdania dotyczące RAID1 (mirror) w systemie Linux.",
-                    "answers": [
-                        "Całkowita pojemność partycji połączonych w RAID1 jest taka jak pojemność najmniejszej z tych partycji.",
-                        "Do utworzenia RAID1 można wykorzystać trzy partycje.",
-                        "Zastosowanie RAID1 pozwala na zwiększenie szybkości zapisu i odczytu danych.",
-                        "RAID1 jest całkowicie odporny na uszkodzenie jednej partycji (dane można w pełni odtworzyć)."
-                    ],
-                    "values": [true, true, false, true]
-                },
-                {
-                    "question": "Które z poniższych funkcji macierzy RAID zwiększają bezpieczeństwo danych?",
-                    "answers": [
-                        "mirroring (lustrzane odbicie)",
-                        "stripping (paskowanie)",
-                        "macierze liniowe",
-                        "kontrola parzystości"
-                    ],
-                    "values": [true, false, false, true]
-                },
-                {
-                    "question": "Trzy dyski, każdy o pojemności 1TB, połączyliśmy w macierz RAID5. Jaką pojemnośd ma uzyskany wolumien?",
-                    "answers": [
-                        "0.5 TB",
-                        "1 TB",
-                        "2 TB",
-                        "3 TB"
-                    ],
-                    "values": [false, false, true, false]
-                },
-                {
-                    "question": "Zaznacz poprawną odpowiedz dotyczącą RAID:",
-                    "answers": [
-                        "RAID pozwala łączyć ze sobą dyski celem stworzenia pamięci masowej o dużej pojemności I niezawodności",
-                        "macierz RAID można stworzyć za pomocą sprzętowych kontrolerów oraz systemowych narzędzi",
-                        "do utworzenia RAID5 wystarczą dwa dyski",
-                        "nie da stworzyć się macierzy dyskowej z dwóch dysków"
+                        "Wolumeny Logiczne (LV) można na żywo łatwo powiększać i pomniejszać dodając przestrzeń z dysku, bez obaw o reset czy użycie wkrętaka partycyjnego jak GParted.",
+                        "Do Grupy (VG) można dołączyć łącznie parę innych dysków twardych o różnych pojemnościach sklejając je bezproblemowo w jeden 'super dysk' z potężną pulą bloków.",
+                        "Włączenie serwisu systemowego lvm2 od razu kompresuje bloki, drastycznie przyspieszając pracę starego talerza napędowego dzięki zintegrowanym algorytmom LZ4.",
+                        "Jest on domyślnie kompatybilny w 100% tylko ze środowiskami platform Windows z rodziny NTFS."
                     ],
                     "values": [true, true, false, false]
                 },
                 {
-                    "question": "Skrót RAID oznacza:",
+                    "question": "Jeśli weźmiemy na tapet tworzenie Macierzy Lustrzanej z dwóch fizycznych pendrive'ów z użyciem LVM-RAID, czym na prezentacji różni się to od staromodnej architektury mdadm pod względem konfiguracji?",
                     "answers": [
-                        "Redundant Array of Independent Disks",
-                        "Redundant Array of Independent Drives",
-                        "Remote Array of Independent Disks",
-                        "Reserved Array of Independent Disks"
+                        "Należy przekazać w terminalu odpowiedni przełącznik komendy `lvcreate` powołując ją m.in flagą `--type raidX` bez przymusu przełączania się do innych środowisk konfiguracyjnych terminala.",
+                        "Zamiast przeglądać plik z logiem systemowym `/proc/mdstat`, postęp naprawy/klonowania oraz strukturę uszkodzeń dyskowych uzyskujemy przy wsparciu rodzimego i powszechnego polecenia `lvs`.",
+                        "Wykorzystanie macierzy zagnieżdżonej LVM-RAID odbiera nam uprawnienia do ustawiania wyższych architektur nadmiarowości takich jak słynny RAID 5 (nie jest on tam od najnowszej wersji 2.0 dostępny).",
+                        "LVM-RAID wymusza po procesie formatu ręczne kodowanie pliku binarnego z tablicą MBR do tablicy serwera /etc/mdadm.conf, aby zapobiec ucieczce zasobu."
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Wskaż CAŁKOWICIE poprawne i sprawdzone podczas laboratorium polecenie, z pomocą którego system wykreuje macierz lustrzaną RAID1 (kopia 1 do 1), zadeklarowaną o twardym rozmiarze 3GB jako wolumen 'lv_raid1', na grupie 'lab_vg' opierając się celowo na nośnikach '/dev/sde' i '/dev/sdf':",
+                    "answers": [
+                        "sudo lvcreate --type raid1 -m 1 -L 3G -n lv_raid1 lab_vg /dev/sde /dev/sdf",
+                        "sudo lvcreate --raid 1 --mirrors 2 -size 3G lv_raid1 lab_vg /dev/sde /dev/sdf",
+                        "sudo lvm-raid -level 1 -m 1 -L 3G -n lv_raid1 lab_vg /dev/sde /dev/sdf",
+                        "sudo vgcreate --type raid1 lab_vg /dev/sde /dev/sdf"
                     ],
                     "values": [true, false, false, false]
                 },
                 {
-                    "question": "Macierz RAID 0 używana jest do:",
+                    "question": "Zakładając w systemie architekturę zagnieżdżoną LVM, często zachodzi potrzeba jej trwałego usunięcia przed zwróceniem instancji roboczej dysku. Jeśli zakończyłeś pracę w katalogu (odmontowując /mnt), w jakiej kolejności system zezwoli bezpiecznie wykasować te powłoki bez ostrzeżeń?",
                     "answers": [
-                        "Poprawy wydajności zapisu",
-                        "Zabezpieczeniem danych przed awarią dysku kosztem dostępnego miejsca",
-                        "Zabezpieczeniem danych przed awarią dysku kosztem czasu dostępu",
-                        "Skrócenia czasu odbudowy macierzy"
+                        "Najpierw niszczysz Wolumeny (lvremove), następnie wykasowujesz Grupę (vgremove) a na końcu zdejmujesz inicjalizację Dysków (pvremove).",
+                        "Wystarczy wywołać alias `lvm-clean --all` i zrestartować fstab w procesie deamona.",
+                        "Wymusza się zniszczenie struktury głównej `pvremove`, co automatycznie posyła powiadomienie po pniach wykasowujące resztę przypiętych VG i LV z pominięciem ich stanu zapisu.",
+                        "Niszczymy rekursywnie poleceniem katalog z plikami logiki, czyli `sudo rm -rf /dev/lab_vg/` i system samodzielnie usunie obiekty PV z pamięci udev."
                     ],
                     "values": [true, false, false, false]
                 },
                 {
-                    "question": "Co jest zawartością pliku /proc/mdstat?",
+                    "question": "Używając nowoutworzonego wolumenu z opcją lustrzaną (RAID1) w środowisku LVM wydałeś komendę podglądu struktury w tle z atrybutami opcji `-a -o name,copy_percent,devices lab_vg`. Jakich informacji dostarczy okno terminala o macierzy?",
                     "answers": [
-                        "Konfiguracje RAID",
-                        "Aktualny stan macierzy",
-                        "Standardowe procery obsługi RAID",
-                        "Listę uruchomionych procesów"
+                        "Pokazuje bardzo ważny postęp procentowy ukrytego procesu synchronizowania bit-w-bit obrazu dysków macierzy w tle na dysk drugorzędny (copy_percent).",
+                        "Identyfikuje i uświadamia na jakich urządzeniach wirtualnych/fizycznych (/dev/sde etc.) oparte są ukryte ramy wolumenów macierzowych z suffixem '_rimage' i '_rmeta'.",
+                        "Pokazuje ile procent macierzy utraciłeś podczas niespodziewanego zerwania jednego wirtualnego mostka SATA na symulatorze sprzętowym.",
+                        "Program natychmiast wrzuci w okno komunikat odmowy dostępu, ponieważ flaga diagnostyki urządzeń `-a` jest specyficznym odwołaniem klasycznego pliku mdadm_status."
                     ],
-                    "values": [false, true, false, false]
+                    "values": [true, true, false, false]
                 },
                 {
-                    "question": "Aby połączyć dwa wolumeny w wolumen liniowy użyjemy instrukcji:",
+                    "question": "Przy manipulacji dostępnym miejscem na LVM stosuje się różną typografię dodawania w poleceniu. Co dokładnie w mechanice wywoła podanie wartości z prefixem PLUS w narzędziu do poszerzania pamięci (na przykład: `-L +2G`)?",
                     "answers": [
-                        "mdadm -create -verbose /dev/md0/ --level linear -raid-dervices=2 /dev/sdb1 /dev/sdb2",
-                        "Mdfs -create -verbose /dev/md0/ --level linear -raid-dervices=2 /dev/sdb1 /dev/sdb2",
-                        "mdadm -create -verbose /dev/md0/ -level=raid1 -raid-dervices=2 /dev/sdb1 /dev/sdb2",
-                        "mdadm -new -verbose /dev/md0/ -level linear -raid-dervices=2 /dev/sdb1 /dev/sdb2"
+                        "Taka deklaracja poinstruuje kontroler logiczny by nie ingerował w bazowy ustalony rozmiar, lecz jedynie dołożył na wierzch kolejne 2 Gigabajty przestrzeni z wolnej grupy i doczepił je na koniec dysku.",
+                        "Jeśli napiszesz sam numer rozmiaru '-L 2G' (bez zdefiniowania plusa), polecenie zamiast powiększać system operacyjny po prostu wirtualnie i bezwzględnie zetnie/przypisze jego ogólny rozmiar docelowy na pułapie 2 GB.",
+                        "Używa się znaku plus do wymuszenia powiększenia rezerwowego pola na ukryte pliki konfiguracyjne dysku (tylko w ext4/metadata).",
+                        "Taka opcja funkcjonuje i dodaje bloki tylko i wyłącznie podczas wywoływania narzędzia vgextend; nie działa na przyporządkowaniu końcowych bloków."
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "W LVM stosuje się poręczne 3-znakowe komendy dla administratorów do rzucenia okiem na przegląd systemu blokowego na odpowiednich szczeblach. Które dopasowania komend i podsumowań na wejściu ekranu powłoki w prezentacji LVM są zgodne z prawdą?",
+                    "answers": [
+                        "Wykonanie 'pvs' da szybki i zwięzły wgląd na odnalezione wolumeny fizyczne przypisane lub pozostające bez grupy (VG).",
+                        "Wykonanie 'vgs' uwidoczni podsumowania statystyk grupy: m.in ramy fizycznych dysków przynależnych grupie, zsumowane użycie i wylistuje ile GB zostało jeszcze nam wolne.",
+                        "Wykonanie 'lvs' da na wydruku wgląd po listach zbudowanych i zadeklarowanych dyskach końcowych dla systemu plików, identyfikując ich wirtualną rolę (jak dyski cienkie, macierze, czy snapshopy).",
+                        "Wykonanie 'pvshow' / 'vgshow' oraz 'lvshow' będzie o wiele bezpieczniejszą funkcją dedykowaną w celu podglądu zduplikowanych ram deamona `dmeventd` w środowiskach debianów 11 i 12."
+                    ],
+                    "values": [true, true, true, false]
+                },
+                {
+                    "question": "Czym w swojej istocie jest LVM (Logical Volume Manager)?",
+                    "answers": [
+                        "Warstwą abstrakcji pomiędzy fizycznymi nośnikami danych a systemem plików.",
+                        "Mechanizmem pozwalającym na dynamiczne zarządzanie i agregację przestrzeni dyskowej.",
+                        "Bezpośrednim zamiennikiem dla systemów plików takich jak ext4 czy NTFS.",
+                        "Narzędziem służącym wyłącznie do szyfrowania partycji systemowych."
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Wybierz poprawne zdania opisujące architekturę i jednostki LVM:",
+                    "answers": [
+                        "VG (Volume Group) działa jak pojemnik (grupa), z którego przydziela się przestrzeń dla wolumenów logicznych.",
+                        "LVM domyślnie podaje rozmiary przestrzeni na podstawie jednostek PE (Physical Extents), które standardowo mają rozmiar 4 MB.",
+                        "PV (Physical Volume) to logiczna przestrzeń, na której montuje się system plików.",
+                        "Jeden wolumen fizyczny (PV) może należeć jednocześnie do wielu grup wolumenów (VG), by optymalizować miejsce."
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Wskaż główne korzyści ze stosowania środowiska LVM w systemach produkcyjnych:",
+                    "answers": [
+                        "Możliwość rozszerzania wolumenów w locie (online), bez konieczności restartu serwera.",
+                        "Możliwość migracji danych na inny dysk fizyczny bez przerywania pracy aplikacji.",
+                        "Funkcjonalność Snapshotów pozwalająca na bezpieczne wykonywanie testów i kopii zapasowych.",
+                        "Wbudowana, automatyczna defragmentacja danych w tle dla dysków HDD."
+                    ],
+                    "values": [true, true, true, false]
+                },
+                {
+                    "question": "W których z wymienionych systemów operacyjnych LVM jest konfigurowany i używany jako mechanizm DOMYŚLNY podczas standardowej instalacji serwerowej?",
+                    "answers": [
+                        "Red Hat Enterprise Linux (RHEL)",
+                        "CentOS / AlmaLinux",
+                        "Windows Server 2022 (jako zastępstwo dla Storage Spaces)",
+                        "Ubuntu Server (z instalatorem Subiquity)"
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "System plików a LVM – wskaż prawdziwe stwierdzenia różnicujące te dwa pojęcia:",
+                    "answers": [
+                        "LVM działa poniżej systemu plików, agregując partycje i dyski.",
+                        "Użytkownik końcowy zazwyczaj nie widzi LVM bezpośrednio, w przeciwieństwie do systemu plików.",
+                        "Narzędziem do obsługi systemu plików jest np. lvresize, a do LVM mkfs.",
+                        "Tworzenie plików, katalogów i zarządzanie ich uprawnieniami to zadanie LVM."
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Czym jest 'Thin provisioning' (cienkie przydzielanie) w środowisku LVM?",
+                    "answers": [
+                        "Tworzeniem wolumenów, które zgłaszają systemowi określony rozmiar, ale fizycznie zużywają miejsce tylko wtedy, gdy dane są na nich faktycznie zapisywane.",
+                        "Pozwala na 'overcommit' – sumaryczny rozmiar wolumenów logicznych może przekraczać fizyczną pojemność grupy VG.",
+                        "Przydzielaniem wolumenom fizycznym mniejszej mocy zasilacza w celu oszczędzania energii.",
+                        "Zabezpieczeniem, które bezwzględnie uniemożliwia uszkodzenie danych przy braku fizycznego miejsca."
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Chcesz bezpiecznie zmniejszyć rozmiar wolumenu logicznego, na którym znajduje się system plików ext4. Jaka jest dopuszczalna kolejność działań?",
+                    "answers": [
+                        "Odmontowanie -> Sprawdzenie błędów (e2fsck) -> Zmniejszenie systemu plików (resize2fs) -> Zmniejszenie LV (lvreduce).",
+                        "Zmniejszenie systemu plików (resize2fs) -> Zmniejszenie LV (lvreduce) w locie.",
+                        "Odmontowanie -> Zmniejszenie LV (lvreduce) -> Zmniejszenie systemu plików (resize2fs).",
+                        "Zmniejszenie LV (lvreduce) -> Formatowanie dysku (mkfs.ext4) -> Przywrócenie ze snapshota."
                     ],
                     "values": [true, false, false, false]
                 },
                 {
-                    "question": "Zaznacz poprawne twierdzenia na temat RAID 0:",
+                    "question": "Za pomocą jakiego parametru w poleceniu lvcreate zadeklarujesz, że nowy dysk logiczny ma zająć CAŁĄ dostępną, wolną przestrzeń w grupie VG?",
                     "answers": [
-                        "Zapewnia ochronę przed utratą danych",
-                        "Zapewnia zwiększoną wydajność zapisu",
-                        "Zapewnia zwiększoną wydajność odczytu",
-                        "Do jej stworzenia potrzebne są minimalnie 3 dyski"
-                    ],
-                    "values": [false, true, true, false]
-                },
-                {
-                    "question": "Na komputerze została stworzona macierz RAID 1 złożona z 3 partycji sda1, sdb1 i sdc1, wszystkie dyski pracuja poprawnie i nie są uszkodzone, co się stanie w momencie wywołania komendy: 'mdadm /dev/md0 remove /dev/sda1'",
-                    "answers": [
-                        "Partycja sda1 zostanie usunięta z macierzy md0",
-                        "Nic",
-                        "Partycja sda1 zostanie usunięta z macierzy jeśli przedtem wywołano komende 'mdadm --fail /dev/md0 /dev/sda1'",
-                        "Macierz md0 zostanie usunięta"
-                    ],
-                    "values": [false, false, true, false]
-                },
-                {
-                    "question": "Wskaż typy macierzy dyskowych, które do ochrony danych wykorzystują sumy kontrolne",
-                    "answers": [
-                        "RAID 0",
-                        "RAID 1",
-                        "RAID 3",
-                        "RAID 5"
-                    ],
-                    "values": [false, false, true, true]
-                },
-                {
-                    "question": "Zaznacz prawdziwe zdania dotyczące RAID5.",
-                    "answers": [
-                        "RAID5 polega na tworzeniu kopi danych na rożnych dyskach (mirroring)",
-                        "Macierz składa się z 5 lub więcej dysków",
-                        "Macierz składająca się z n dysków jest odporna na awarię n - 2 dysków",
-                        "Wszystkie powyższe odpowiedzi są nie poprawne"
-                    ],
-                    "values": [false, false, false, true]
-                },
-                {
-                    "question": "W maszynie zainstalowana jest macierz RAID. Jeden z dysków podlega awarii. Zaznacz zdania prawdziwe.",
-                    "answers": [
-                        "Dla macierzy RAID 5 po wymianie uszkodzonego dysku dane zostaną odbudowane.",
-                        "Macierz RAID 1 przestanie funkcjonować.",
-                        "Jeśli zainstalowane były 3 dyski, macierz RAID 1 pozwoli na dalsza pracę bez utraty danych.",
-                        "Macierz RAID 5 nie wymaga wymiany dysku na nowy przed wznowieniem pracy."
-                    ],
-                    "values": [true, false, true, true]
-                },
-                {
-                    "question": "Wpisanie polecenia fdisk /dev/hda oraz p spowoduje:",
-                    "answers": [
-                        "sformatowanie dysku hda",
-                        "wypisanie listy partycji istniejących na dysku hda",
-                        "utworzenie na dysku hda partycji zajmującej całą dostępną przestrzeń",
-                        "uruchomienie systemu operacyjnego z dysku hda"
-                    ],
-                    "values": [false, true, false, false]
-                },
-                {
-                    "question": "Wskaż cechy RAID 5:",
-                    "answers": [
-                        "bity parzystości są zapisywane na specjalnie do tego przeznaczonym dysku",
-                        "szybkość dostępu do danych nie ulega zmianie w wypadku awarii jednego z dysków",
-                        "gwarantuje stuprocentowe bezpieczeństwo danych przy awarii jednego dysku",
-                        "jego zaletą jest szybki odczyt, jego wada to powolny zapis"
-                    ],
-                    "values": [false, false, true, true]
-                },
-                {
-                    "question": "Co odróżnia macierze RAID programowe od sprzętowych?",
-                    "answers": [
-                        "Obsługą macierzy programowych zajmuje się odpowiednie oprogramowanie, np. mdadm.",
-                        "Macierze programowe mają większą wydajność w porównaniu do sprzętowych.",
-                        "Problem awarii fizycznego nośnika w żaden sposób nie dotyczy macierzy programowych.",
-                        "W macierzach programowych problem awarii fizycznego dotyczy jedynie poziomu RAID 0."
+                        "Z użyciem zapisu jednostek PE: -l 100%FREE",
+                        "Z użyciem zapisu w bajtach/GB: -L 100%FREE",
+                        "Za pomocą flagi --max-size",
+                        "Z użyciem -L MAX"
                     ],
                     "values": [true, false, false, false]
                 },
                 {
-                    "question": "Wykonywanie jakich czynności związanych z macierzami RAID umożliwia polecenie mdadm w systemach z rodziny Linux?",
+                    "question": "Które zdania opisujące zaawansowane mechanizmy RAID w systemie Linux są poprawne?",
                     "answers": [
-                        "Podłączanie nowych urządzeń do macierzy.",
-                        "Generowanie zawartości plików konfiguracyjnych macierzy.",
-                        "Sprawdzanie statusu macierzy.",
-                        "Programowe symulowanie awarii w macierzy."
+                        "Macierz RAID 0 zapewnia najwyższą wydajność, ale awaria jednego dysku oznacza utratę wszystkich danych.",
+                        "Macierz RAID 1 zapewnia nadmiarowość poprzez tzw. 'mirroring' (kopie 1:1), tracąc przy tym 50% całkowitej pojemności dysków.",
+                        "Mdadm operuje bezpośrednio na urządzeniach blokowych (dyskach), a nie w ramach grup wolumenów LVM.",
+                        "Macierz RAID 5 wymaga minimum 2 dysków i zapewnia ochronę przed awarią wszystkich dysków w macierzy."
                     ],
-                    "values": [true, true, true, true]
+                    "values": [true, true, true, false]
                 },
                 {
-                    "question": "Polecenie mount umożliwia: Wskaż wszystkie poprawne odpowiedzi",
+                    "question": "Jaka jest prawidłowa ścieżka dodania nowego dysku /dev/sde do grupy lab_vg i powiększenia wolumenu lab_lv o 30 GB?",
                     "answers": [
-                        "Zamontowanie wszystkich partycji wymienionych w fstab",
-                        "Odmontowanie wszystkich partycji wymienionych w fstab",
-                        "Odmontowanie partycji",
-                        "Zamontowanie partycji"
+                        "pvcreate /dev/sde -> vgextend lab_vg /dev/sde -> lvextend -L +30G /dev/lab_vg/lab_lv -> resize2fs /dev/lab_vg/lab_lv",
+                        "Użycie polecenia lvextend z flagą -r (np. -r -L +30G) automatycznie powiększy system plików w tym procesie.",
+                        "vgextend lab_vg /dev/sde -> pvcreate /dev/sde -> lvextend -L +30G /dev/lab_vg/lab_lv",
+                        "pvcreate /dev/sde -> lvresize -L +30G /dev/sde"
                     ],
-                    "values": [true, false, false, true]
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Czego używa środowisko LVM do szyfrowania wolumenów w celu ochrony przed fizyczną kradzieżą danych?",
+                    "answers": [
+                        "Korzysta z mechanizmu LUKS (Linux Unified Key Setup) i pakietu cryptsetup.",
+                        "Bezpośrednio narzuca system plików NTFS i BitLocker.",
+                        "Narzędzia mdadm --encrypt.",
+                        "Szyfruje metadane jednostek PE wbudowanym w moduł jądra szyfrem własnościowym."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Wskaż poprawną strukturę warstwową (kanapkę kryptograficzną) dla bezpiecznego serwera z LVM:",
+                    "answers": [
+                        "Szyfrowanie LUKS na fizycznym dysku -> PV -> VG -> LV -> System plików",
+                        "PV -> VG -> Szyfrowanie LUKS -> LV -> System plików",
+                        "System plików -> LVM -> Szyfrowanie LUKS",
+                        "PV -> LV -> Szyfrowanie LUKS -> System plików"
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Jakie komendy i w jakiej kolejności wykonać, by usunąć dysk /dev/sdd z działającego serwera LVM?",
+                    "answers": [
+                        "pvmove /dev/sdd -> vgreduce lab_vg /dev/sdd -> pvremove /dev/sdd.",
+                        "pvremove /dev/sdd -> Fizyczne wyrwanie dysku z obudowy.",
+                        "vgreduce lab_vg /dev/sdd -> pvmove /dev/sdd.",
+                        "umount /dev/sdd -> lvremove /dev/sdd -> pvremove /dev/sdd."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Co zrobi polecenie: `sudo mdadm --create /dev/md5 --level=5 --raid-devices=4 /dev/sde /dev/sdf /dev/sdg /dev/sdh`?",
+                    "answers": [
+                        "Stworzy tradycyjną macierz RAID 5 składającą się z czterech dysków.",
+                        "Stworzy wirtualny kontener LVM na 4 dyskach.",
+                        "Utworzy system plików BFS na wolumenie md5.",
+                        "Sformatuje wymienione dyski w systemie ext4."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Dlaczego po wykonaniu `lvextend -L +5G` narzędzie `df -h` nadal pokazuje stary rozmiar?",
+                    "answers": [
+                        "Powiększono tylko strukturę logiczną LVM, zapomniano rozciągnąć system plików (resize2fs/xfs_growfs).",
+                        "Dysk nie został odmontowany przed zmianą.",
+                        "Brakuje restartu środowiska LVM poleceniem systemctl restart lvm2.",
+                        "Zmiana rozmiaru zadziałała, ale zaktualizuje się po restarcie maszyny."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Narzędzie `cryptsetup open /dev/sdm cryptdisk` w procedurze LVM wykonuje się w celu:",
+                    "answers": [
+                        "Odblokowania zaszyfrowanego dysku i udostępnienia go w systemie pod nazwą w /dev/mapper/.",
+                        "Zniszczenia nagłówków LUKS z dysku /dev/sdm.",
+                        "Formatowania i stworzenia nowego klucza szyfrującego na dysku.",
+                        "Wypisania na konsoli skrótu SHA-256 użytego hasła."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Oznaczanie wolumenów tagami (`--addtag`) umożliwia administratorowi:",
+                    "answers": [
+                        "Przeszukiwanie i filtrowanie konkretnych logicznych wolumenów (np. za pomocą lvs --select).",
+                        "Tworzenie fizycznych partycji opartych na nazwach tagów.",
+                        "Wymuszanie szyfrowania na wolumenach tylko o konkretnym tagu.",
+                        "Udostępnianie wolumenu w sieci z protokołem SAMBA."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Jakie komponenty są konieczne do obsługi monitorowania Thin Provisioningu w LVM?",
+                    "answers": [
+                        "Narzędzie systemowe dmeventd.",
+                        "Uruchomiona usługa lvm2-monitor.",
+                        "Środowisko graficzne GNOME lub KDE.",
+                        "Zależność od systemu plików ext4 (nie zadziała na XFS)."
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Co osiągniesz wydając komendę `lvcreate -s -L 2G -n moj_snapshot /dev/vg01/lv_root`?",
+                    "answers": [
+                        "Utworzysz migawkę (snapshot) dysku, rejestrującą zmiany od obecnego momentu w czasie.",
+                        "Stworzysz kopię lustrzaną systemu (RAID1) o rozmiarze 2GB.",
+                        "Usuniesz system plików, tworząc kopię zapasową w formacie tar.gz.",
+                        "Skompresujesz zawartość partycji głównej do 2GB."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Kiedy zastosowanie LVM jest absolutnie niezalecane?",
+                    "answers": [
+                        "Jeśli zależy nam na trywialnym procesie odzyskiwania danych za pomocą amatorskich narzędzi w małych komputerach domowych.",
+                        "Gdy z góry, całkowicie i bez wyjątków znamy stały podział miejsca na partycje.",
+                        "W środowiskach wymagających elastycznej rozbudowy o kolejne terabajty.",
+                        "Gdy systemem operacyjnym jest nowa wersja macOS lub Windows Server."
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Różnica pomiędzy parametrami -L i -l w narzędziach lvcreate/lvextend polega na tym, że:",
+                    "answers": [
+                        " -L określa rozmiar deklarowany twardymi jednostkami (MB, GB), a -l operuje na liczbie jednostek PE (lub wartościach procentowych).",
+                        "Oba te parametry są aliasami w środowisku bash.",
+                        "-L służy do zmniejszania dysku, a -l do jego rozszerzania.",
+                        "-L służy do tworzenia Snapshotów, a -l to zwykłe wolumeny."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Jakie zadanie na dyskach wykonuje komenda `mdadm --zero-superblock`?",
+                    "answers": [
+                        "Wyczyszczenie na poszczególnych dyskach sygnatur (metadanych) informujących je, że należały do macierzy RAID.",
+                        "Wyzerowanie pierwszego bloku MBR na dysku, niszcząc tablicę partycji.",
+                        "Całkowite sformatowanie dysku do formatu 'zero'.",
+                        "Ustawienie poziomu RAID 0."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Jak odwołać się do zaszyfrowanej warstwy, by po utworzeniu struktury położyć na niej LVM, zakładając że odblokowano kontener poleceniem cryptsetup?",
+                    "answers": [
+                        "pvcreate /dev/mapper/tajnydysk",
+                        "pvcreate /dev/sdb",
+                        "vgcreate tajnydysk /dev/sdb",
+                        "mount /dev/tajnydysk"
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Z jakich poleceń skorzystasz, by upewnić się o ilości wolnego miejsca do przydzielenia w ramach grupy wolumenów (wartość VFree)?",
+                    "answers": [
+                        "vgs",
+                        "vgdisplay",
+                        "df -h",
+                        "lsblk"
+                    ],
+                    "values": [true, true, false, false]
                 }
             ]
         },
@@ -1958,6 +1628,411 @@ const db = {
                         "Znacznik `#SBATCH -e errfile` służy jako interpreter kodu i jeśli program posiada błąd kompilacji, SLURM wyłączy cały klaster."
                     ],
                     "values": [true, true, true, false]
+                }
+            ]
+        },
+        {
+            "name": "Programowanie w systemie LIN (LIN)",
+            "questions": [
+                {
+                    "question": "Zgodnie z materiałami, w jaki sposób poprawnie skompilować kod źródłowy serwera napisany w języku C/C++ z użyciem kompilatora GCC?",
+                    "answers": [
+                        "gcc -o server exercise1_server.c",
+                        "gcc exercise1_server.c -output server",
+                        "gcc -c exercise1_server.c -run server",
+                        "gcc -o exercise1_server.c server"
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Aby skompilować program wykorzystujący bibliotekę wątków (POSIX threads) w systemie Linux, należy użyć odpowiedniej flagi kompilatora. Wskaż poprawne polecenie:",
+                    "answers": [
+                        "gcc -o pthread exercise2.c -pthread",
+                        "gcc -o pthread exercise2.c -threads",
+                        "gcc -o pthread exercise2.c --lpthreads",
+                        "gcc -pthread -o exercise2.c pthread"
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Przed rozpoczęciem programowania z użyciem wątków na niektórych systemach Linux, konieczna może być instalacja dodatkowego pakietu deweloperskiego. Które polecenie realizuje ten cel poprawnie?",
+                    "answers": [
+                        "sudo apt-get install libpthread-stubs0-dev",
+                        "sudo apt-get install pthread-dev",
+                        "sudo apt install linux-threads-core",
+                        "sudo apt-get install libpthread-core-dev"
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Zgodnie z instrukcją do zadania 1, jakiego polecenia (lub narzędzia powłoki) należy użyć, aby stworzyć potok nazwany (named pipe) w systemie plików?",
+                    "answers": [
+                        "mkfifo",
+                        "mknod",
+                        "pipe()",
+                        "create_pipe"
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "W jaki sposób system plików w systemie Linux oznacza potok nazwany (FIFO) w wynikach polecenia np. `ls -l`?",
+                    "answers": [
+                        "Pierwszym znakiem w ciągu uprawnień jest litera 'p' (np. prw-r--r--).",
+                        "Pierwszym znakiem w ciągu uprawnień jest litera 'f' (np. frw-r--r--).",
+                        "Atrybut ten wyświetla się jako czerwony kolor nazwy, bez zmiany liter uprawnień.",
+                        "Plik ten posiada ukryty atrybut 'pipe', widoczny tylko poprzez polecenie 'filefrag'."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Której funkcji języka C/C++ musi użyć klient, aby dynamicznie uzyskać numer PID własnego procesu do umieszczenia w komunikacie?",
+                    "answers": [
+                        "getpid()",
+                        "pid()",
+                        "process_id()",
+                        "get_pid()"
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Zgodnie z wymaganiami z zadania 1, w jaki sposób z poziomu terminala użytkownik ma wysłać sygnał SIGINT do działającego procesu serwera?",
+                    "answers": [
+                        "Wykorzystując polecenie `kill` z odpowiednią opcją i identyfikatorem PID serwera.",
+                        "Wpisując komendę `signal -SIGINT [pid]` z poziomu konsoli.",
+                        "Używając kombinacji klawiszy `Ctrl+C`, jeśli serwer działa interaktywnie w tej samej powłoce na pierwszym planie.",
+                        "Wykorzystując polecenie `send_signal SIGINT` podając nazwę pliku wykonywalnego."
+                    ],
+                    "values": [true, false, true, false]
+                },
+                {
+                    "question": "Serwer z zadania 1 ma przechwycić sygnał SIGINT i wykonać określone operacje zamykające program. Która funkcja posłuży do podpięcia własnej obsługi (handlera) pod ten sygnał w kodzie?",
+                    "answers": [
+                        "signal()",
+                        "catch_signal()",
+                        "sig_handler()",
+                        "sigaction()"
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Do zapisania w logach daty i czasu otrzymania sygnału zatrzymującego (SIGINT), wytyczne sugerują użycie konkretnych narzędzi z języka C++. Wskaż wszystkie poprawne:",
+                    "answers": [
+                        "Funkcja ctime()",
+                        "Funkcja now() z biblioteki chrono",
+                        "Zmienna systemowa $TIME",
+                        "Funkcja get_time() z biblioteki <time.h>"
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "W zadaniu 2 należy utworzyć dwa osobne wątki, które będą obsługiwać funkcje `dec()` i `inc()`. Jakiej funkcji API z biblioteki POSIX do tego użyjemy?",
+                    "answers": [
+                        "pthread_create()",
+                        "pthread_make()",
+                        "thread_create()",
+                        "fork()"
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "W programie z wątkami (Zadanie 2), dwa współbieżne wątki inkrementują i dekrementują tę samą zmienną globalną typu `long long`. Gdzie w pamięci znajduje się ta zmienna?",
+                    "answers": [
+                        "W pamięci współdzielonej przez wszystkie wątki tego samego procesu.",
+                        "W odizolowanej przestrzeni adresowej każdego wątku z osobna (jako unikalna kopia na ich stosie).",
+                        "W pamięci jądra systemu Linux (Kernel Space), do której wątki wysyłają systemowe żądania modyfikacji.",
+                        "Zmienne globalne dla wątków w Linuksie przechodzą automatycznie do specjalnego pliku tymczasowego na dysku."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Jaką rolę pełni funkcja `usleep()` wykorzystana w wątku głównym w zadaniu 2?",
+                    "answers": [
+                        "Zawiesza (usypia) wykonywanie wątku, z którego została wywołana, na podany czas w mikrosekundach.",
+                        "Zawiesza wykonywanie wątku, z którego została wywołana, na podany czas w milisekundach.",
+                        "Wymusza na systemie operacyjnym natychmiastowe przerwanie i uśpienie wszystkich powołanych przez program wątków pobocznych.",
+                        "Odłącza proces od terminala, przekazując jego działanie całkowicie w tło."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Jakiej funkcji POSIX Threads, zgodnie z instrukcją z zadania 2, należy użyć, aby główny proces \"usunął\" (anulował/przerwał działanie) oba nieskończone wątki poboczne?",
+                    "answers": [
+                        "pthread_cancel()",
+                        "pthread_kill()",
+                        "pthread_destroy()",
+                        "pthread_exit()"
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Analizując podstawowe wywołanie kompilatora np. `gcc -o client exercise1_client.c`, za co dokładnie odpowiada flaga `-o`?",
+                    "answers": [
+                        "Wskazuje kompilatorowi nazwę pliku wyjściowego (wykonywalnego), który ma zostać utworzony na dysku.",
+                        "Określa typ optymalizacji kodu wynikowego.",
+                        "Zleca włączenie modułu kompilacji obiektowej, powstrzymując proces linkowania.",
+                        "Łączy kod z zewnętrzną biblioteką systemową niezbędną do działania."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "W jaki sposób potok nazwany (named pipe) zrealizowany w zadaniu 1 różni się od potoku nienazwanego (anonimowego)?",
+                    "answers": [
+                        "Potok nazwany posiada wpis w systemie plików i umożliwia dwukierunkową wymianę danych między całkowicie niespokrewnionymi procesami.",
+                        "Potok nazwany pozwala na komunikację wyłącznie między procesem rodzica a jego procesami potomnymi, ograniczając dostęp zewnętrzny.",
+                        "Potok nazwany nie używa w ogóle pamięci RAM, cały przepływ danych jest bezpośrednio zapisywany na dysku twardym komputera.",
+                        "W systemie Linux nie ma koncepcji potoków nienazwanych; każdy potok z natury musi posiadać nazwę przed wywołaniem go funkcją pipe()."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Czym tak naprawdę są sygnały w systemie operacyjnym Linux (takie jak użyty w laboratorium SIGINT)?",
+                    "answers": [
+                        "Są to formy oprogramowania komunikacji międzyprocesowej (IPC); to proste asynchroniczne powiadomienia wysyłane do procesu o wystąpieniu danego zdarzenia.",
+                        "Są to zsynchronizowane kanały bezpośredniej wymiany dużych porcji danych między różnymi wątkami w C++.",
+                        "Systemowym odpowiednikiem wyjątków języka C++, służącym wyłącznie do obsługi błędów segmentacji (segfault).",
+                        "Natywną implementacją sprzętowych kolejek stosowanych bezpośrednio na poziomie kontrolerów na płycie głównej."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Dlaczego podczas równoległego wykonywania funkcji `inc()` oraz `dec()` na tej samej zmiennej globalnej typu `long long` w nieskończonej pętli, bez użycia funkcji chroniących (np. mutexów), jej wartość przy odczycie może być błędna?",
+                    "answers": [
+                        "Ponieważ operacje modyfikacji zmiennej nie są sprzętowo atomowe; występuje zjawisko wyścigu (race condition), w którym jeden wątek może nadpisać wyniki drugiego.",
+                        "Ponieważ środowisko Linux celowo blokuje częsty zapis zmiennych globalnych jako ochrona przeciwko zapętlaniu procesorów.",
+                        "Pętla nieskończona powoduje wyciek pamięci (memory leak), który uszkadza wartość w ramce stosu głównego procesu.",
+                        "Nie wystąpi tam żaden błąd; system POSIX dla języka C natywnie rozpoznaje wątki i zawsze synchronizuje je automatycznie w tle."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Do zautomatyzowania procesu wielokrotnej kompilacji różnych plików, autor laboratorium poleca wykonanie zadania startowego:",
+                    "answers": [
+                        "Użycie narzędzia `make`, które w oparciu o plik Makefile może skompilować np. wszystkie 4 programy bez ręcznego wpisywania kilkukrotnie komendy gcc.",
+                        "Napisanie wewnętrznego skryptu .bat i wywołanie go pod systemem Linux za pomocą polecenia `start_build`.",
+                        "Uruchomienie skryptu `bash-compile -all` ze specjalnymi prawami dostępu z poziomu konta root.",
+                        "Załączenie do projektu środowiska VirtualBox z przygotowanymi kompilatorami do pracy wieloplatformowej."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Jaki jest dokładnie format ramki danych przesyłanej od klienta do serwera (na podstawie opisu polecenia laboratoryjnego)?",
+                    "answers": [
+                        "Na początku znajduje się identyfikator procesu klienta (PID), a zaraz po nim następuje tekst wiadomości.",
+                        "Wiadomość musi zawierać IP procesu wysyłającego, maskę logiczną portu i treść zsumowaną bitowo.",
+                        "Tekst wiadomości jest zawsze opakowany we wbudowaną w biblioteki strukturę JSON przed zapisem na dysk.",
+                        "Do potoku jako pierwszy trafia PID serwera, upewniający demona logującego o autentyczności poświadczeń klienta."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Według instrukcji obrazkowej (slajd 8-9) zasada działania komunikacji potoku nazwanego przebiega w następujących krokach:",
+                    "answers": [
+                        "Proces klienta zapisuje wiadomość do potoku nazwanego (Write a message), a następnie Proces Serwera z tego samego potoku tę wiadomość odczytuje (Read a message).",
+                        "Proces klienta inicjuje połączenie z serwerem DNS, który odczytuje trasę wiadomości, po czym serwer aplikacyjny wysyła na potok informację z logami.",
+                        "Proces serwera i proces klienta piszą naraz do tego samego segmentu potoku, który samoczynnie decyduje do kogo dostarczyć bajty.",
+                        "Potok w obu kierunkach nie wymaga odczytu, ponieważ działa na zasadzie współdzielenia pliku tekstowego na dysku fizycznym bez obróbki zdarzeń I/O."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "W jaki sposób z poziomu terminala utworzyć potok nazwany w systemie plików (np. o nazwie 'my_pipe')? Wskaż polecenia, które potrafią to prawidłowo zrealizować w systemach Linux:",
+                    "answers": [
+                        "mkfifo my_pipe",
+                        "make-fifo my_pipe",
+                        "mknod my_pipe p",
+                        "pipe create my_pipe"
+                    ],
+                    "values": [true, false, true, false]
+                },
+                {
+                    "question": "Jeśli skompilujesz program serwera za pomocą GCC pomijając flagę określającą plik wyjściowy (np. wywołując samo `gcc exercise1_server.c`), co domyślnie zrobi kompilator?",
+                    "answers": [
+                        "Utworzy plik wykonywalny o domyślnej nazwie `a.out` w bieżącym katalogu.",
+                        "Zgłosi błąd krytyczny `Fatal error: no output file specified` i przerwie proces kompilacji.",
+                        "Utworzy jedynie obiektowy plik pośredni `exercise1_server.o` bez wywoływania procesu linkowania.",
+                        "Nadpisze Twój plik źródłowy `exercise1_server.c` wynikiem w kodzie maszynowym."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Co się najprawdopodobniej stanie na poziomie kompilacji/działania, jeśli przy budowaniu programu w C wykorzystującego bibliotekę POSIX Threads (np. z funkcją `pthread_create()`) pominiesz w terminalu flagę `-pthread`?",
+                    "answers": [
+                        "Kompilator/Linker zgłosi błąd informujący o niezdefiniowanym odwołaniu (undefined reference) do funkcji takich jak `pthread_create`.",
+                        "Program skompiluje się poprawnie, a system w tle uruchomi pojedynczy wirtualny wątek zamiast współbieżności.",
+                        "Kompilator odrzuci nagłówek `#include <pthread.h>` informując, że biblioteka ta została wycofana z C++.",
+                        "System operacyjny zatrzyma działanie programu w momencie jego startu, odsyłając błąd `Segmentation fault`."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Serwer logujący z Zadania 1 działa z numerem PID wynoszącym 4050. Instrukcja nakazuje zamknięcie go sygnałem SIGINT z konsoli. Które z poniższych poleceń powłoki zrobią to poprawnie?",
+                    "answers": [
+                        "kill -SIGINT 4050",
+                        "kill -2 4050",
+                        "kill 4050",
+                        "kill --interrupt 4050"
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Funkcja `pthread_create()` służąca do powoływania nowych wątków przyjmuje 4 argumenty. Na co wskazują te argumenty? Wskaż prawidłowe odpowiedzi:",
+                    "answers": [
+                        "Wskaźnik na zmienną przechowującą systemowy identyfikator tego tworzonego wątku (typu `pthread_t`).",
+                        "Wskaźnik na funkcję w kodzie programu (routine), która ma zostać rozpoczęta i wykonana w nowym wątku.",
+                        "Ścisły wskaźnik na fizyczny adres rdzenia procesora (core affinity), do którego przypniemy wątek.",
+                        "Identyfikator portu TCP, przez który nowo utworzony wątek ma raportować błędy do serwera głównego."
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "W jakim celu instrukcja do zadania z potokami nazwanymi (Zad. 1) sugeruje wykorzystanie funkcji `now()` z modułu `<chrono>` w języku C++?",
+                    "answers": [
+                        "Aby precyzyjnie odmierzyć i pobrać aktualny czas systemowy (na poczet logowania daty zatrzymania serwera do pliku).",
+                        "W celu usypiania wątków czekających na nadchodzący ciąg z potoku (zastępując funkcję POSIX `sleep()`).",
+                        "Służy to do tworzenia zabezpieczeń antyspamowych, ucinających pakiety jeśli napływają od klientów szybciej niż co sekundę.",
+                        "Moduł `<chrono>` odpowiada sprzętowo za wstrzykiwanie tzw. stempli czasowych (timestamps) do systemowych ramek sieciowych."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Z jakiego systemowego typu danych oraz z jakiej funkcji języka C korzysta Klient z Zadania 1, aby poprawnie pobrać swój własny, unikalny identyfikator procesu przed wysłaniem go do potoku?",
+                    "answers": [
+                        "Z typu `pid_t` oraz funkcji `getpid()`.",
+                        "Z typu `process_id` oraz funkcji `pid()`.",
+                        "Z typu `unsigned int` oraz systemowej flagi środowiskowej `$PID`.",
+                        "Z typu `thread_t` oraz funkcji `pthread_self()`."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "W specyficznym mechanizmie komunikacji IPC jakim są potoki nazwane (FIFO), co domyślnie zajdzie po stronie systemu, gdy proces Serwera otworzy pusty potok żądając odczytu danych, ale żaden Klient jeszcze nie otworzył tego potoku by móc cokolwiek wysłać?",
+                    "answers": [
+                        "Domyślnie, proces Serwera zostanie po prostu zawieszony (zablokowany w stanie oczekiwania) na instrukcji otwierającej, czekając aż zgłosi się jakiś proces zapisujący.",
+                        "Serwer natychmiastowo wejdzie w stan paniki Kernel-Panic i zrzuci plik błędów z powodu operacji wejścia na pustym deksryptorze.",
+                        "Program serwera wypełni swoje bufory znakami NULL (pustymi bitami), kręcąc się w nieskończonej pętli odczytu.",
+                        "Wymusi zamknięcie potoku u innych hostów przez nadanie w konsoli kodu sygnału awaryjnego z flagą `-block`."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "W wątku głównym w zadaniu z `pthreads` użyta jest funkcja `usleep()`, dzięki której proces może wstrzymać działanie by np. umożliwić pracę zapętlonym wątkom. Składnia `usleep(X)` oczekuje podania wartości liczbowej. Co oznaczają używane w niej jednostki?",
+                    "answers": [
+                        "Funkcja pauzuje wykonanie wątku w mikrosekundach. Jeśli chcesz odczekać 2 sekundy, musisz podać wartość 2000000.",
+                        "Funkcja pauzuje wykonanie na podaną ilość milisekund, zachowując zgodność z C++. Odczekanie 2 sekund to `usleep(2000)`.",
+                        "To nakładka na polecenie `sleep()`, pauzuje wątek w pełnych sekundach. Dwie sekundy to wartość 2.",
+                        "Argument funkcji `usleep` określa numer wątku, który powinien zostać uśpiony przez głównego schedulera, a nie czas czekania."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "W Zadaniu 2, dwie nieskończone pętle w różnych wątkach modyfikują (dodają i odejmują wartości) jedną zmienną globalną `long long`. Z uwagi na brak użytych mechanizmów w rodzaju Mutex-ów, co jest technologiczną przyczyną otrzymania np. niezerowego, losowego wyniku na ekranie na koniec pracy?",
+                    "answers": [
+                        "Operacje typu ++ lub -- nie są na poziomie procesora operacjami w pełni atomowymi. Wątki wykonujące to równolegle mogą wpaść w tzw. wyścig (Race Condition) i nadpisywać wzajemnie swoje rejestry.",
+                        "Wielowątkowość na architekturze x86/ARM wiąże się często z oddzielnymi pamięciami podręcznymi Cache L1/L2. Brak synchronizacji blokad powoduje tzw. błędy spójności i niewidoczność modyfikacji (Cache coherence).",
+                        "Zmienne typu 'long long' ładują do pamięci specjalny wskaźnik alokacji dynamicznej (malloc), który bez mechanizmu 'free()' wywołuje błędne re-adresowanie komórek RAM przez Kernel.",
+                        "Jądro Linux wbudowało automatyczną randomizację niestrzeżonych wątkowo zmiennych, tzw. Thread-Sanitizer ASLR, by wymuszać stosowanie obiektów klasy standard library `std::mutex`."
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Częstym błędem programistów używających kompilatora GCC dla C i C++ jest błędna kolejność wpisywania flag w środowisku terminala. Zaznacz polecenie/polecenia PRAWIDŁOWO sformułowane do skompilowania kodu wielowątkowego:",
+                    "answers": [
+                        "gcc exercise2.c -o my_threads -pthread",
+                        "gcc -pthread -o my_threads exercise2.c",
+                        "gcc -o my_threads -thread=POSIX exercise2.c",
+                        "gcc my_threads exercise2.c --pthreads --out"
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Zadanie z plikiem `Makefile` pozwala na kompilowanie np. całego systemu wieloplikowego krótkim słowem 'make'. Z jakich wbudowanych standardów korzysta na wejściu to polecenie?",
+                    "answers": [
+                        "Narzędzie to poszukuje we wskazanej ścieżce roboczej pliku `Makefile` lub `makefile`, który musi zawierać prawidłowo sformatowane przez użytkownika dyrektywy celów, np. instrukcje wywoływania gcc.",
+                        "Narzędzie to bez Twojej wiedzy skanuje wszystkie odnalezione pliki `.c` z folderu i aplikuje na nich globalne kompilatory binarne Debiana.",
+                        "Jeśli napiszesz program w nowym języku skryptowym, to narzędzie Make zautomatyzuje translację do języka Asemblera pobierając odpowiednie pliki binarne z usługi wget.",
+                        "Wymaga sztywno zadeklarowanego pliku JSON `build.config.json` z konfiguracją ścieżek sieciowych portów środowiska WSL."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Mechanizm przerywania pracy i usuwania podprocesów `pthread_cancel()` ma pewną wbudowaną specyfikę zachowania podczas anulowania nieskończonej pętli. O co dokładnie chodzi?",
+                    "answers": [
+                        "To po prostu wysłanie żądania o anulowanie (cancellation request). Anulowany wątek przestanie działać po napotkaniu lub przejściu w tzw. punkt anulowania (cancellation point).",
+                        "Rozwiązanie natychmiastowo wstrzymuje zasilanie napięciowe logiki rdzeni wywołanego procesu po magistrali procesora uniemożliwiając wykonanie nawet jednej linijki więcej.",
+                        "Zanim zniszczy referencję struktury stosu powiązaną ze zgłoszonym wątkiem zawsze utworzy awaryjny punkt przywracania aplikacji, tzw. proces zombie na dysku HDD.",
+                        "Użycie tej funkcji blokuje dostęp kompilatorów na prawach root-a do odczytu kodu źródłowego programu w środowisku roboczym."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Sprawdzając komendą `ls -l` parametry potoku w katalogu powłoki Bash, odnajdujesz ciąg `prw-rw-r--`. Jaki jest schemat tłumaczenia tego stringa systemowego w Linuksie?",
+                    "answers": [
+                        "Literka `p` na absolutnym początku deklaracji wskazuje, że obiekt jest strumieniowym plikiem specjalnego przeznaczenia (pipe), a nie standardowym plikiem danych tekstowych (`-`) czy np. zwykłym katalogiem (`d`).",
+                        "Wartości `rw-` na pozycjach grupy właściciela wskazują, że twórca potoku ma przypisane do niego m.in. aktywne uprawnienia czytania (r) oraz zapisywania danych (w).",
+                        "Na końcu pojawia się `r--`, co oznacza że każdy zwykły użytkownik systemu może przeczytać pliki logowania serwera ale domyślnie posiada zakaz nadpisywania tego potoku żądaniami.",
+                        "Znak 'p' to atrybut rozgłoszenia (public), co oznacza, że dany plik po wpisaniu adresu IP będzie mógł pobrać pracownik (worker) poza zadeklarowanym klastrem SLURM."
+                    ],
+                    "values": [true, true, true, false]
+                },
+                {
+                    "question": "Aby stworzyć w C sformatowany string o schemacie `[pid (identyfikator procesu)] [tekst]`, by Serwer zrozumiał nadesłany ciąg znaków, z jakiego sprytnego sposobu z bibliotek natywnych skorzysta wprawiony programista?",
+                    "answers": [
+                        "Wykorzysta popularną funkcję wpisywania danych formatowanych wprost do zarezerwowanego bufora tekstowego (łańcucha char array): `sprintf(buffer, \"%d %s\", getpid(), \"Wiadomosc\");`.",
+                        "Wymusi na kodzie nadawanie struktury z użyciem wywołania funkcji `send_signal()` jako wbudowanego w jądro pakowacza ramek TCP w JSON.",
+                        "Stworzy specjalny obiekt wirtualny `std::pipe` wysyłając najpierw komendę integer poprzez port sprzętowy powłoki COM1 do maszyny serwera.",
+                        "Załączy bibliotekę `htons()` konwertując wskaźnik identyfikatora procesu do szesnastkowej formy pakietowej bajtów procesora (Big-endian)."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Porównaj potoki do wątków. Stworzyłeś w laboratorium dwa osobne, asynchroniczne procesy: Serwer logowania (zad 1) i Klient logowania (zad 1) używające wymiany IPC po dysku, jak i jeden pojedynczy główny program powołujący 2 wątki (zad 2). Różnią się one modelem dostępu do pamięci komputera. Jak?",
+                    "answers": [
+                        "Procesy serwera oraz klienta są niezależne i odizolowane w warstwie przydziału RAM - posiadają własne i oddzielne przestrzenie adresowe z własnymi zmiennymi wirtualnymi. Aby współdzielić parametry używamy potoków.",
+                        "Główny wątek inicjujący `main` oraz dwa jego wywołane wątki współbieżne współdzielą z definicji cały wirtualny segmet adresowy tego jednego procesu (tzw. wspólną stertę, wskaźniki i kod).",
+                        "Wszystkie aplikacje niezależnie od tego, czy używają struktury procesów, czy struktury pod-wątków mają systemowy nakaz przydziału całkowicie oddzielnych, sklonowanych bloków pamięci dla celów ochrony segmentacji kodu.",
+                        "Z perspektywy schedulera jądra w systemach rodziny Linux/Unix absolutnie nie występuje podział na różnice adresacji pamięci pomiędzy wirtualnym procesem i wirtualnym modelem thread'a."
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Gdy w serwerze logującym z Zadania 1 decydujesz się na zastosowanie funkcji C przypinającej niestandardowe zachowanie, zamykanie buforów odczytu i zapis pliku wyjścia w momencie otrzymania w terminalu znaku od usera, deklarujesz podpięcie poprzez: `signal(SIGINT, my_handler_func);`. Jaką prawidłową deklarację musi mieć na wejściu przygotowana do tego zadania własna metoda `my_handler_func`?",
+                    "answers": [
+                        "Musi to być poprawna funkcja niezwracająca wartości, pobierająca jedną przekazywaną systemowo liczbę całkowitą informującą o id powołanego sygnału: `void my_handler_func(int signum) { ... }`",
+                        "Musi to być klasyczna funkcja systemowa C wywołująca na końcu zero bezpieczeństwa: `int my_handler_func(void) { return 0; }`",
+                        "Z uwagi na strukturę środowiska, handler musi obsługiwać wskaźnik na nadpisany łańcuch tekstowy sygnału z modułem tablic `void my_handler_func(char* signal_name_ptr) { ... }`",
+                        "Oczekuje podania parametru wielokrotności identyfikatorów zgłoszeniowych dla systemu przesyłowego procesora `string my_handler_func(int sig_id, string reason_str) { ... }`"
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Kompilacja oprogramowania pod Linuxem może wymagać wywołania dołączanego pliku nagłówkowego systemu. By poprawnie obsługiwać logikę funkcji powłoki `getpid()` czy flag sygnałów dla potoków, z których nagłówków standardu GNU C POSIX należy korzystać?",
+                    "answers": [
+                        "<unistd.h>",
+                        "<sys/types.h>",
+                        "<windows.h>",
+                        "<iostream.h>"
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Zalecana funkcja C/C++ `ctime()` użyta do wrzucania czasu zastopowania pętli wyłapującej logi wejścia do serwera, posiada mało znaną właściwość wstawiającą znak specyficzny na wyjściu bufora parsowania. Jaka to charakterystyczna, z góry zaaplikowana zasada?",
+                    "answers": [
+                        "Implementacja tej funkcji dodaje zawsze, pod sam koniec tworzonego automatycznie ciągu daty systemowej niewidoczny znak nowej linii `\\n` (LF/CRLF), bez zgody programisty.",
+                        "Wpisuje na wyjście informację po twardo narzuconym, sztywnym angielskim konwerterze językowym, np. zawsze zacznie łańcuch z trzyliterowego skrótu, jak 'Mon' dla Poniedziałku.",
+                        "Funkcja natywnie blokuje wywołania z systemów Linux x64 podając w zmiennej odwrócony wektor unix-timestapu zaczynającego datowanie wsteczne od limitu 2038 roku (Y2K38).",
+                        "Odmienia ona czas względem czasu absolutnego, to znaczy wyrzuca tylko odliczoną formę matematyczną w sekundach ignorując na stałe wszystkie systemowe poprawki na strefy czasowe powłoki UTC/GMT."
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Na jednym ze slajdów znajduje się wyraźny opis strukturalnego wejścia-wyjścia podczas trwania mechaniki strumieniowego Potoku Nazwanego (Zadanie 1). Klient oraz Serwer wymieniają dane w oparciu o określoną sekwencję kroków odczytu powłoki Linux:",
+                    "answers": [
+                        "Niezależny proces klienta zapisuje wygenerowany log wejścia (swoje dane tekstowe) celując do stworzonego obiektu potoku nazwanego; z kolei następnie w czasie rzeczywistym Serwer nasłuchuje zdarzeń i odczytuje tę pożądaną wiązkę bajtów z tego samego punktu montowania struktury potoku dla siebie.",
+                        "Zasada mówi o przymusowym utworzeniu potoku nazwanego komendą mkfifo przez proces klienta za każdym razem (z prawem `root`) zanim połączy się on z maszyną lokalną na podane hasło w protokole.",
+                        "System operacyjny rozdziela port z wejściem odczytu `stdin`, by aplikacja pracownika automatycznie modyfikowała sygnałem nadpisaną macierz RAMu o priorytetach z użyciem biblioteki wielowątkowych stert pamięci.",
+                        "W procesach IPC tego typu, zapis jest zawsze traktowany asymetrycznie - serwer wysyła komendę autoryzacyjną podając klucz sygnałowy przez kanał kontrolny (Ctrl+C w trybie deamona), by klient odpowiedział wysyłając log."
+                    ],
+                    "values": [true, false, false, false]
                 }
             ]
         },
