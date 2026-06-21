@@ -968,6 +968,586 @@ const db = {
                         "Prawdopodobieństwo utraty danych jest większe niż dla analogicznej macierzy RAID 1"
                     ],
                     "values": [false, true, false, true]
+                },
+                {
+                    "question": "Aby wykorzystać programowy RAID5 w systemie Windows 2008 Serwer należy posiadać komputer z zainstalowanymi",
+                    "answers": [
+                        "trzema dyskami",
+                        "trzema dyskami oraz kontrolerem umożliwiającym systemowi Windows 2008 Server utworzenie programowej macierzy RAID5",
+                        "czterema dyskami",
+                        "pięcioma dyskami"
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Na ilu dyskach można założyć wolumen paskowany używając systemu operacyjnego Windows 2008?",
+                    "answers": [
+                        "na 1",
+                        "na 2",
+                        "na 3",
+                        "na 4"
+                    ],
+                    "values": [false, true, true, true]
+                },
+                {
+                    "question": "Na komputerze posiadającym 6 dysków zostanie zainstalowany system operacyjny Windows 2008 Server. Która konfiguracja pozwoli na pracę z najlepszym wykorzystaniem przestrzeni na dyskach zakładając, że nie można użyć macierzy sprzętowych?",
+                    "answers": [
+                        "2 dyski spięte w mirror, 3 dyski spięte w RAID5",
+                        "2 dyski spięte w mirror, pozostałe 4 dyski spięte w wolumen paskowany",
+                        "wszystkie 6 dysków spiętych w RAID5",
+                        "utworzone 3 mirrory po 2 dyski każdy"
+                    ],
+                    "values": [false, true, false, false]
+                },
+                {
+                    "question": "Na ilu dyskach można założyć wolumen paskowany używając systemu operacyjnego Windows 7?",
+                    "answers": [
+                        "na 1",
+                        "na 2",
+                        "na 3",
+                        "na 5"
+                    ],
+                    "values": [false, true, true, true]
+                },
+                {
+                    "question": "Na komputerze posiadającym 3 dyski zostanie zainstalowany system operacyjny Windows 2008 Server. Która konfiguracja pozwoli na pracę z najlepszym wykorzystaniem przestrzeni na dyskach zakładając, że nie można użyć macierzy sprzętowych?",
+                    "answers": [
+                        "2 dyski spięte w mirror, jeden dysk bez zabezpieczeń",
+                        "3 dyski spięte w spanned volume",
+                        "wszystkie 3 dyski spięte w RAID5",
+                        "wszystkie dyski spięte w mirror"
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Konfiguracja RAID0:",
+                    "answers": [
+                        "Pojemność wszystkich połączonych dysków jest równa N* pojemność najmniejszego dysku, gdzie N to liczba połączonych dysków.",
+                        "Nie dostarcza żadnego zabezpieczenia danych.",
+                        "Znajduje idealne zastosowanie gdzie wydajność jest ważniejsza od bezpieczeństaw danych.",
+                        "Pojemność wszystkich połączonych dysków jest równa pojemności najmniejszego z nich."
+                    ],
+                    "values": [true, true, true, false]
+                },
+                {
+                    "question": "Jakie są dostępne typy dysków dynamicznych w systemie Windows 2003?",
+                    "answers": [
+                        "Mirror",
+                        "Spanned Volume",
+                        "Stripped Volume",
+                        "Simple Volume"
+                    ],
+                    "values": [true, true, true, true]
+                },
+                {
+                    "question": "W konfiguracji RAID1:",
+                    "answers": [
+                        "Dane zapisywane są na obu dyskach równocześnie.",
+                        "Dane są zapisywane na kolejnych dyskach bit po bicie, tak jak w przypadku RAID2.",
+                        "Efektywna pojemność wynosi 50% pojemności dysków.",
+                        "Wykorzystuje paskowanie dysków."
+                    ],
+                    "values": [true, false, true, false]
+                },
+                {
+                    "question": "Które z poniższych zdań opisują macierz RAID1 (mirroring)?",
+                    "answers": [
+                        "RAID1 oferuje możliwość strippingu danych.",
+                        "Calkowita pojemność danych macierzy jest równa pojemności największego dysku.",
+                        "Pojemność macierzy jest równa pojemności najmniejszego dysku pomnożonego przez liczbę dysków.",
+                        "Odporność na awarię N-1 dysków w N-dyskowej macierzy."
+                    ],
+                    "values": [false, false, false, true]
+                },
+                {
+                    "question": "W przypadku którego typu konfiguracji dysków istnieje możliwość odzyskania danych jeśli jeden z dysków macierzy ulegnie awarii?",
+                    "answers": [
+                        "konfiguracja typu stripped volume",
+                        "konfiguracja typu RAID5",
+                        "konfiguracja typu mirror",
+                        "konfiguracja typu spanned volume"
+                    ],
+                    "values": [false, true, true, false]
+                },
+                {
+                    "question": "Mirrored volume w systemie Windows 2008 ma następujące właściwości:",
+                    "answers": [
+                        "może chronić wolumen z bootowalnym systemem operacyjnym Windows 2008.",
+                        "może obejmować więcej niż 2 dyski.",
+                        "całkowicie likwiduje ryzyko utraty danych.",
+                        "nie można go założyć na dyskach typu \"basic disk\"."
+                    ],
+                    "values": [true, false, false, true]
+                },
+                {
+                    "question": "Który z typów RAID zapewni bezpieczeństwo przy awarii jednego dysku?",
+                    "answers": [
+                        "RAID0+1",
+                        "RAID0",
+                        "RAID1",
+                        "RAID5"
+                    ],
+                    "values": [true, false, true, true]
+                },
+                {
+                    "question": "Wskaż poprawną odpowiedź:",
+                    "answers": [
+                        "Przestrzeń macierzy w RAID0 jest zależna od rozmiaru najmniejszego z użytych dysków.",
+                        "RAID0+1 i RAID1+0 udostępniają 100% sumy pojemności wszystkich użytych dysków.",
+                        "RAID4 to macierz, której dane na dyskach są paskowane.",
+                        "Awaria dwóch dysków w RAID6 nie powoduje utraty danych."
+                    ],
+                    "values": [true, false, true, true]
+                },
+                {
+                    "question": "Programowy RAID5 w systemie Windows 2008 Server:",
+                    "answers": [
+                        "można utworzyć już na 2 dyskach.",
+                        "można utworzyć na 4 dyskach.",
+                        "Zwiększa odporność systemu na awarie dysków.",
+                        "można założyć na dyskach typu \"dynamic\" lub basic."
+                    ],
+                    "values": [false, true, true, false]
+                },
+                {
+                    "question": "Jakie właściwości ma programowy RAID5 w systemie operacyjnym Windows 2008?",
+                    "answers": [
+                        "można go założyć na 5 dyskach.",
+                        "umożliwia lepsze wykorzystanie przestrzeni na dyskach niż wolumen paskowany.",
+                        "zapewnia bezawaryjną pracę systemu.",
+                        "pozwala uniknąć fragmentacji systemu plików."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Zaznacz zdania prawdziwe:",
+                    "answers": [
+                        "RAID występuje wyłącznie sprzętowy.",
+                        "RAID występuje wyłącznie programowy.",
+                        "RAID występuje zarówno programowy jak i sprzętowy.",
+                        "Nie ma żadnej możliwości uruchomienia RAID w domowym komputerze PC."
+                    ],
+                    "values": [false, false, true, false]
+                },
+                {
+                    "question": "Które z podanych zdań są prawdziwe?",
+                    "answers": [
+                        "RAID programowy pozwala na bezpośredni start systemu z macierzy dyskowej.",
+                        "RAID sprzętowy posiada wyższą wydajność od RAID programowego, gdyż przeliczaniem sum kontrolnych zajmuje się dedykowany kontroler.",
+                        "RAID programowy posiada większą kompatybilność z mniej popularnymi systemami operacyjnymi, gdyż wszystkie systemy operacyjne obsługują technologię RAID.",
+                        "RAID sprzętowy pozwala na bezpośredni start systemu z macierzy dyskowej."
+                    ],
+                    "values": [false, true, false, true]
+                },
+                {
+                    "question": "W systemie windows 2008 na 5 dyskach za pomocą systemu operacyjnego został założony RAID5 Po pewnym czasie podczas pracy systemu 2 dyski uległy uszkodzeniu.",
+                    "answers": [
+                        "jeśli uszkodzone dyski zostaną wymienione na nowe to po ponownym uruchomieniu systemu dane zostaną automatycznie odzyskane",
+                        "odzyskiwanie danych będzie przezroczyste dla użytkowników jeśli dyski są typu hot swap",
+                        "w systemie Windows 2008 nie można użyć RAID5",
+                        "dane będzie można odzyskać tylko z archiwizacji, a nie z RAID5"
+                    ],
+                    "values": [false, false, false, true]
+                },
+                {
+                    "question": "Jakie właściwości ma programowy RAID5 na systemie operacyjnym Windows 2008?",
+                    "answers": [
+                        "można go założyć na pięciu dyskach",
+                        "umożliwia lepsze wykorzystanie przestrzeni na dyskach niż wolumen paskowany",
+                        "zapewnia bezawaryjną pracę systemu",
+                        "pozwala uniknąć fragmentacji systemu plików"
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Konfiguracja RAID2:",
+                    "answers": [
+                        "jest rozszerzeniem architektury RAID0",
+                        "dane są zapisywane na kolejnych dyskach macierzy bit po bicie",
+                        "cechuje się dużą wydajnością przy operacjach odczytu",
+                        "jest często stosowana w macierzach dyskowych"
+                    ],
+                    "values": [false, true, false, false]
+                },
+                {
+                    "question": "Dyski typu podstawowego (ang. basic disks) pozwalają na:",
+                    "answers": [
+                        "oznaczenie partycji jako aktywnej",
+                        "rozszerzenie woluminów prostych (ang. simple volume)",
+                        "tworzenie partycji podstawowej",
+                        "tworzenie woluminów RAID5"
+                    ],
+                    "values": [true, false, true, false]
+                },
+                {
+                    "question": "Dla których wolumenów prawdopodobieństwo utraty danych jest mniejsze niż dla wolumenu łączonego (spanned volume):",
+                    "answers": [
+                        "mirrored volume",
+                        "striped volume",
+                        "simple volume",
+                        "RAID5"
+                    ],
+                    "values": [true, false, true, true]
+                },
+                {
+                    "question": "Jakie właściwości ma programowy RAID5 na systemie operacyjnym Windows 2008?",
+                    "answers": [
+                        "zapewnia bezawaryjną pracę systemu",
+                        "chroni system przed awarią tylko jednego dysku",
+                        "pozwala uniknąć fragmentacji systemu plików",
+                        "umożliwia lepsze wykorzystanie przestrzeni na dyskach niż wolumen paskowany"
+                    ],
+                    "values": [false, true, false, false]
+                },
+                {
+                    "question": "W systemie Ubuntu, zakładając, że pliki blokowe /dev/sdb1 i /dev/sdb2 reprezentują partycje o rozmiarze 50MB, bezpośrednio po utworzeniu woluminu /dev/md0 poleceniem:\n`mdadm -create -verbose /dev/md0 --level linear --raid-devices=2 /dev/sdb1 /dev/sdb2`:",
+                    "answers": [
+                        "wolumin /dev/md0 będzie miał wielkość 100MB",
+                        "wolumin /dev/md0 będzie miał wielkość 50MB",
+                        "wolumin /dev/md0 będzie można zamontować poleceniem mount /dev/md0 /mnt",
+                        "uszkodzenie dokładnie jednego spośród urządzeń /dev/sdb1 oraz /dev/sdb2 może spowodować utratę danych w woluminie /dev/md0"
+                    ],
+                    "values": [true, false, false, true]
+                },
+                {
+                    "question": "RAID5 może składać się z następującej ilości dysków:",
+                    "answers": [
+                        "2",
+                        "3",
+                        "4",
+                        "5"
+                    ],
+                    "values": [false, true, true, true]
+                },
+                {
+                    "question": "RAID inaczej zwanym lustrzanym (mirroringiem) to:",
+                    "answers": [
+                        "RAID1",
+                        "RAID2",
+                        "RAID3",
+                        "RAID5"
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Jakie polecenie pozwoli na rozpoczęcie procedury tworzenia partycji:",
+                    "answers": [
+                        "fdisk /dev/hda",
+                        "mkdir /dev/sda",
+                        "fdisk /dev/sdb",
+                        "mdadd /dev/sdb"
+                    ],
+                    "values": [true, false, true, false]
+                },
+                {
+                    "question": "Jaka ilość dysków jest wystarczająca, aby zastosować RAID 5:",
+                    "answers": [
+                        "1",
+                        "2",
+                        "3",
+                        "4"
+                    ],
+                    "values": [false, false, true, true]
+                },
+                {
+                    "question": "Mając do dyspozycji 3 identyczne dyski twarde można stworzyć macierz RAID w konfiguracji:",
+                    "answers": [
+                        "RAID 0",
+                        "RAID 5",
+                        "RAID 6",
+                        "RAID 10"
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Trzy dyski zostały połączone w macierz RAID 0.",
+                    "answers": [
+                        "Łączna przestrzeń dyskowa jest równa sumie przestrzeni, każdego z dysków",
+                        "Łączna przestrzeń dyskowa jest równa potrojonej przestrzeni dyskowej najmniejszego dysku",
+                        "Szybkość jest równa potrojonej szybkości najwolniejszego z dysków",
+                        "Szybkość jest równa szybkości najwolniejszego z dysków"
+                    ],
+                    "values": [true, true, true, false]
+                },
+                {
+                    "question": "Administrator podłączył do komputera dwa dyski twarde o pojemności 200GB każdy i połączył je w macierz RAID 1. Do komputera nie zostały podłączone żadne inne dyski. Które z poniższych twierdzeń są prawidłowe?",
+                    "answers": [
+                        "Całkowita pojemność partycji dostępnych w systemie nie przekracza 200GB.",
+                        "Rozwiązanie takie zapewnia o wiele większą prędkość odczytu i zapisu danych niż macierz RAID 0.",
+                        "Rozwiązanie takie zapewnia o wiele większe bezpieczeństwo danych niż macierz RAID 0.",
+                        "W przypadku awarii jednego dysku użytkownik straci wszystkie swoje dane"
+                    ],
+                    "values": [true, false, true, false]
+                },
+                {
+                    "question": "Zaznacz zdania prawdziwe dotyczące sprzętowej macierzy RAID:",
+                    "answers": [
+                        "Macierz jest zupełnie przezroczysta, przez co z punktu widzenia Systemu Operacyjnego zachowuje się ona jak każdy inny dysk twardy",
+                        "mniejsza wydajność poprzez zwiększenie obciążenia CPU",
+                        "Minimalna liczba dysków potrzebna do stworzenia macierzy to 2",
+                        "Sprzętowa macierz RAID zawsze umożliwia przywrócenie danych w razie awarii jednego z dysków"
+                    ],
+                    "values": [true, false, true, false]
+                },
+                {
+                    "question": "Zaznacz zdania prawdziwe dotyczące programowej macierzy RAID:",
+                    "answers": [
+                        "Macierz jest zupełnie przezroczysta, przez co z punktu widzenia Systemu Operacyjnego zachowuje się ona jak każdy inny dysk twardy",
+                        "mniejsza wydajność poprzez zwiększenie obciążenia CPU",
+                        "Minimalna liczba dysków potrzebna do stworzenia macierzy to 2",
+                        "Programowa macierz RAID zawsze umożliwia przywrócenie danych w razie awarii jednego z dysków"
+                    ],
+                    "values": [false, true, true, false]
+                },
+                {
+                    "question": "Woluminy liniowe w katalogu dev oznaczone są jako:",
+                    "answers": [
+                        "md0, md1...",
+                        "ma0, ma1, ... mb0, mb1...",
+                        "raid0, raid1,...",
+                        "rda0, rda1...., rdb0, rdb1...."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Która z aplikacji umożliwia stworzenie partycji na twardym dysku?",
+                    "answers": [
+                        "/etc/fstab",
+                        "/sbin/fdisk",
+                        "/sbin/cfdisk",
+                        "/etc/mtab"
+                    ],
+                    "values": [false, true, true, false]
+                },
+                {
+                    "question": "Które z wymienionych rodzajów macierzy RAID zapewniają mirroring:",
+                    "answers": [
+                        "RAID 0",
+                        "RAID 1",
+                        "RAID 5",
+                        "RAID 10"
+                    ],
+                    "values": [false, true, false, true]
+                },
+                {
+                    "question": "Które z wymienionych poleceń umożliwia zarządzanie macierzami RAID w systemie GNU/Linux:",
+                    "answers": [
+                        "hdparm",
+                        "mdadm",
+                        "fdisk",
+                        "parted"
+                    ],
+                    "values": [false, true, false, false]
+                },
+                {
+                    "question": "Celem wyłączenia automatycznego montowania urządzenia cdrom w systemie Linux należy:",
+                    "answers": [
+                        "Odpowiednio zmodyfikować plik '/etc/fstab'.",
+                        "Wykonać polecenie 'nmount -n cdrom'.",
+                        "Wykonać polecenie 'nmount cdrom'.",
+                        "Odpowiednio zmodyfikować plik /etc/amount."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Polecenie 'fdisk' w systemie Linux można wykorzystać do:",
+                    "answers": [
+                        "tworzenia partycji.",
+                        "wypisania informacji o dysku.",
+                        "montowania dysku.",
+                        "tworzenia kopii zapasowej danych."
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Wskaż poprawne zdania dotyczące RAID5 w systemie Linux:",
+                    "answers": [
+                        "Do utworzenia RAID5 potrzebne są co najmniej dwie partycje.",
+                        "Do utworzenia RAID5 można użyć maksymalnie trzech partycji.",
+                        "Do odtworzenia danych z uszkodzonej partycji zawsze wykorzystywana jest jedna, specjalnie do tego przygotowanej partycja.",
+                        "RAID5 jest całkowicie odporny na uszkodzenie jednej partycji (dane można w pełni odtworzyć)."
+                    ],
+                    "values": [false, false, false, true]
+                },
+                {
+                    "question": "Wskaż poprawne zdania dotyczące RAID1 (mirror) w systemie Linux.",
+                    "answers": [
+                        "Całkowita pojemność partycji połączonych w RAID1 jest taka jak pojemność najmniejszej z tych partycji.",
+                        "Do utworzenia RAID1 można wykorzystać trzy partycje.",
+                        "Zastosowanie RAID1 pozwala na zwiększenie szybkości zapisu i odczytu danych.",
+                        "RAID1 jest całkowicie odporny na uszkodzenie jednej partycji (dane można w pełni odtworzyć)."
+                    ],
+                    "values": [true, true, false, true]
+                },
+                {
+                    "question": "Które z poniższych funkcji macierzy RAID zwiększają bezpieczeństwo danych?",
+                    "answers": [
+                        "mirroring (lustrzane odbicie)",
+                        "stripping (paskowanie)",
+                        "macierze liniowe",
+                        "kontrola parzystości"
+                    ],
+                    "values": [true, false, false, true]
+                },
+                {
+                    "question": "Trzy dyski, każdy o pojemności 1TB, połączyliśmy w macierz RAID5. Jaką pojemnośd ma uzyskany wolumien?",
+                    "answers": [
+                        "0.5 TB",
+                        "1 TB",
+                        "2 TB",
+                        "3 TB"
+                    ],
+                    "values": [false, false, true, false]
+                },
+                {
+                    "question": "Zaznacz poprawną odpowiedz dotyczącą RAID:",
+                    "answers": [
+                        "RAID pozwala łączyć ze sobą dyski celem stworzenia pamięci masowej o dużej pojemności I niezawodności",
+                        "macierz RAID można stworzyć za pomocą sprzętowych kontrolerów oraz systemowych narzędzi",
+                        "do utworzenia RAID5 wystarczą dwa dyski",
+                        "nie da stworzyć się macierzy dyskowej z dwóch dysków"
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Skrót RAID oznacza:",
+                    "answers": [
+                        "Redundant Array of Independent Disks",
+                        "Redundant Array of Independent Drives",
+                        "Remote Array of Independent Disks",
+                        "Reserved Array of Independent Disks"
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Macierz RAID 0 używana jest do:",
+                    "answers": [
+                        "Poprawy wydajności zapisu",
+                        "Zabezpieczeniem danych przed awarią dysku kosztem dostępnego miejsca",
+                        "Zabezpieczeniem danych przed awarią dysku kosztem czasu dostępu",
+                        "Skrócenia czasu odbudowy macierzy"
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Co jest zawartością pliku /proc/mdstat?",
+                    "answers": [
+                        "Konfiguracje RAID",
+                        "Aktualny stan macierzy",
+                        "Standardowe procery obsługi RAID",
+                        "Listę uruchomionych procesów"
+                    ],
+                    "values": [false, true, false, false]
+                },
+                {
+                    "question": "Aby połączyć dwa wolumeny w wolumen liniowy użyjemy instrukcji:",
+                    "answers": [
+                        "mdadm -create -verbose /dev/md0/ --level linear -raid-dervices=2 /dev/sdb1 /dev/sdb2",
+                        "Mdfs -create -verbose /dev/md0/ --level linear -raid-dervices=2 /dev/sdb1 /dev/sdb2",
+                        "mdadm -create -verbose /dev/md0/ -level=raid1 -raid-dervices=2 /dev/sdb1 /dev/sdb2",
+                        "mdadm -new -verbose /dev/md0/ -level linear -raid-dervices=2 /dev/sdb1 /dev/sdb2"
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Zaznacz poprawne twierdzenia na temat RAID 0:",
+                    "answers": [
+                        "Zapewnia ochronę przed utratą danych",
+                        "Zapewnia zwiększoną wydajność zapisu",
+                        "Zapewnia zwiększoną wydajność odczytu",
+                        "Do jej stworzenia potrzebne są minimalnie 3 dyski"
+                    ],
+                    "values": [false, true, true, false]
+                },
+                {
+                    "question": "Na komputerze została stworzona macierz RAID 1 złożona z 3 partycji sda1, sdb1 i sdc1, wszystkie dyski pracuja poprawnie i nie są uszkodzone, co się stanie w momencie wywołania komendy: 'mdadm /dev/md0 remove /dev/sda1'",
+                    "answers": [
+                        "Partycja sda1 zostanie usunięta z macierzy md0",
+                        "Nic",
+                        "Partycja sda1 zostanie usunięta z macierzy jeśli przedtem wywołano komende 'mdadm --fail /dev/md0 /dev/sda1'",
+                        "Macierz md0 zostanie usunięta"
+                    ],
+                    "values": [false, false, true, false]
+                },
+                {
+                    "question": "Wskaż typy macierzy dyskowych, które do ochrony danych wykorzystują sumy kontrolne",
+                    "answers": [
+                        "RAID 0",
+                        "RAID 1",
+                        "RAID 3",
+                        "RAID 5"
+                    ],
+                    "values": [false, false, true, true]
+                },
+                {
+                    "question": "Zaznacz prawdziwe zdania dotyczące RAID5.",
+                    "answers": [
+                        "RAID5 polega na tworzeniu kopi danych na rożnych dyskach (mirroring)",
+                        "Macierz składa się z 5 lub więcej dysków",
+                        "Macierz składająca się z n dysków jest odporna na awarię n - 2 dysków",
+                        "Wszystkie powyższe odpowiedzi są nie poprawne"
+                    ],
+                    "values": [false, false, false, true]
+                },
+                {
+                    "question": "W maszynie zainstalowana jest macierz RAID. Jeden z dysków podlega awarii. Zaznacz zdania prawdziwe.",
+                    "answers": [
+                        "Dla macierzy RAID 5 po wymianie uszkodzonego dysku dane zostaną odbudowane.",
+                        "Macierz RAID 1 przestanie funkcjonować.",
+                        "Jeśli zainstalowane były 3 dyski, macierz RAID 1 pozwoli na dalsza pracę bez utraty danych.",
+                        "Macierz RAID 5 nie wymaga wymiany dysku na nowy przed wznowieniem pracy."
+                    ],
+                    "values": [true, false, true, true]
+                },
+                {
+                    "question": "Wpisanie polecenia fdisk /dev/hda oraz p spowoduje:",
+                    "answers": [
+                        "sformatowanie dysku hda",
+                        "wypisanie listy partycji istniejących na dysku hda",
+                        "utworzenie na dysku hda partycji zajmującej całą dostępną przestrzeń",
+                        "uruchomienie systemu operacyjnego z dysku hda"
+                    ],
+                    "values": [false, true, false, false]
+                },
+                {
+                    "question": "Wskaż cechy RAID 5:",
+                    "answers": [
+                        "bity parzystości są zapisywane na specjalnie do tego przeznaczonym dysku",
+                        "szybkość dostępu do danych nie ulega zmianie w wypadku awarii jednego z dysków",
+                        "gwarantuje stuprocentowe bezpieczeństwo danych przy awarii jednego dysku",
+                        "jego zaletą jest szybki odczyt, jego wada to powolny zapis"
+                    ],
+                    "values": [false, false, true, true]
+                },
+                {
+                    "question": "Co odróżnia macierze RAID programowe od sprzętowych?",
+                    "answers": [
+                        "Obsługą macierzy programowych zajmuje się odpowiednie oprogramowanie, np. mdadm.",
+                        "Macierze programowe mają większą wydajność w porównaniu do sprzętowych.",
+                        "Problem awarii fizycznego nośnika w żaden sposób nie dotyczy macierzy programowych.",
+                        "W macierzach programowych problem awarii fizycznego dotyczy jedynie poziomu RAID 0."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Wykonywanie jakich czynności związanych z macierzami RAID umożliwia polecenie mdadm w systemach z rodziny Linux?",
+                    "answers": [
+                        "Podłączanie nowych urządzeń do macierzy.",
+                        "Generowanie zawartości plików konfiguracyjnych macierzy.",
+                        "Sprawdzanie statusu macierzy.",
+                        "Programowe symulowanie awarii w macierzy."
+                    ],
+                    "values": [true, true, true, true]
+                },
+                {
+                    "question": "Polecenie mount umożliwia: Wskaż wszystkie poprawne odpowiedzi",
+                    "answers": [
+                        "Zamontowanie wszystkich partycji wymienionych w fstab",
+                        "Odmontowanie wszystkich partycji wymienionych w fstab",
+                        "Odmontowanie partycji",
+                        "Zamontowanie partycji"
+                    ],
+                    "values": [true, false, false, true]
                 }
             ]
         }
