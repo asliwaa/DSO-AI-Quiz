@@ -17,8 +17,8 @@ Punkt za całe pytanie przyznawany jest tylko wtedy, gdy wszystkie decyzje w obr
 
 Poniżej znajduje się lista zagadnień, które stopniowo będą wprowadzane do bazy pytań aplikacji:
 
-- [x] Windows - PowerShell (Obecnie zaimplementowane – 20 pytań teoretycznych i składniowych)
-- [ ] Zarządzanie przestrzenią dyskową
+- [x] Windows - PowerShell
+- [x] Zarządzanie przestrzenią dyskową
 - [ ] Zarządzanie kontenerami – część 1 (LIN)
 - [ ] Zarządzanie kontenerami – część 2 (LIN)
 - [ ] MPI – konfiguracja (LIN)
@@ -28,7 +28,7 @@ Poniżej znajduje się lista zagadnień, które stopniowo będą wprowadzane do 
 - [ ] Zaawansowane usługi sieciowe (LIN)
 - [ ] Programowanie w systemie Windows (WIN)
 - [ ] Monitorowanie wywołań systemowych (LIN)
-- [ ] LIN Kernel (LIN)
+- [x] LIN Kernel (LIN)
 
 ## 🚀 Jak uruchomić projekt lokalnie
 
