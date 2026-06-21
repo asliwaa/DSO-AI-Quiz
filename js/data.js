@@ -205,6 +205,230 @@ const db = {
                     "values": [true, true, false, false]
                 }
             ]
+        },
+        {
+            "name": "Zarządzanie przestrzenią dyskową (LIN LVM)",
+            "questions": [
+                {
+                    "question": "W kontekście architektury LVM (Logical Volume Manager), z jakich podstawowych warstw/elementów składa się ten mechanizm? Wskaż poprawne dopasowania:",
+                    "answers": [
+                        "PV (Physical Volume) – fizyczne nośniki danych (rzeczywiste dyski lub partycje).",
+                        "VG (Volume Group) – logiczna grupa wolumenów zbudowana z jednego lub więcej dysków fizycznych (PV).",
+                        "LV (Logical Volume) – wolumeny logiczne, widoczne dla systemu jako partycje, na których tworzony jest system plików.",
+                        "PE (Primary Extent) – główny sektor rozruchowy partycji LVM wykorzystywany podczas startu systemu."
+                    ],
+                    "values": [true, true, true, false]
+                },
+                {
+                    "question": "Wskaż prawidłowe zalety korzystania z LVM w porównaniu do tradycyjnego, statycznego partycjonowania dysków:",
+                    "answers": [
+                        "Możliwość dynamicznej zmiany rozmiaru partycji w locie, często bez przerywania pracy systemu.",
+                        "Możliwość łączenia wielu fizycznych dysków twardych w jedną, dużą przestrzeń widoczną dla użytkownika.",
+                        "LVM samodzielnie i automatycznie wykonuje kopie zapasowe danych na zewnętrzne serwery w chmurze.",
+                        "Łatwa migracja danych na żywo pomiędzy dyskami bez odmontowywania systemów plików."
+                    ],
+                    "values": [true, true, false, true]
+                },
+                {
+                    "question": "Zaznacz poprawne kroki niezbędne do utworzenia i zamontowania nowego, gotowego do pracy wolumenu logicznego (od samego początku):",
+                    "answers": [
+                        "Kolejność poleceń: `pvcreate` -> `vgcreate` -> `lvcreate` -> `mkfs` -> `mount`.",
+                        "Kolejność poleceń: `lvcreate` -> `vgcreate` -> `pvcreate` -> `mount` -> `mkfs`.",
+                        "Przed utworzeniem grupy wolumenów (VG), dyski fizyczne muszą zostać zainicjowane jako Physical Volumes (PV).",
+                        "Domyślnie polecenie `lvcreate` od razu formatuje utworzony wolumen w systemie plików ext4, więc polecenie `mkfs` można pominąć."
+                    ],
+                    "values": [true, false, true, false]
+                },
+                {
+                    "question": "Podczas zmiany rozmiaru wolumenów logicznych (LV) oraz systemów plików w systemie Linux stosuje się określone praktyki. Wskaż zdania prawdziwe:",
+                    "answers": [
+                        "Użycie parametru `-r` (lub `--resizefs`) w poleceniu `lvextend` pozwala na jednoczesne powiększenie wolumenu i automatyczne rozszerzenie systemu plików.",
+                        "Powiększenie zamontowanego systemu plików ext4 na powiększonym wcześniej LV jest niemożliwe i wymaga restartu maszyny.",
+                        "Zmniejszanie wolumenu (`lvreduce`) niesie ryzyko uszkodzenia danych, dlatego najpierw należy odmontować system plików i go zmniejszyć (np. `resize2fs`).",
+                        "Polecenie `lvextend -l +100%FREE` powiększy wolumen logiczny o całe dostępne wolne miejsce w grupie wolumenów (VG)."
+                    ],
+                    "values": [true, false, true, true]
+                },
+                {
+                    "question": "Czym są migawki (Snapshots) w LVM i jak działają?",
+                    "answers": [
+                        "Są to fizyczne, pełne kopie zapasowe 1:1 całego wolumenu kopiowane na oddzielny, specjalnie przypisany dysk.",
+                        "Zamrażają stan wolumenu z danego momentu; bazują na mechanizmie Copy-on-Write (kopiowanie przy zapisie) – zapisywane są w nich tylko zrobione zmiany.",
+                        "Migawki w LVM mogą zajmować znacznie mniej miejsca niż docelowy wolumen logiczny, chyba że cała zawartość oryginalnego wolumenu zostanie zmieniona.",
+                        "Służą do bezpiecznego testowania zmian (np. aktualizacji). Zmiany z migawki można odrzucić lub przywrócić z niej stan używając `lvconvert --merge`."
+                    ],
+                    "values": [false, true, true, true]
+                },
+                {
+                    "question": "Jak działa mechanizm Thin Provisioning (pule cienkiej alokacji) w środowisku LVM?",
+                    "answers": [
+                        "Pozwala na utworzenie wolumenów logicznych o deklarowanym rozmiarze większym niż faktycznie dostępna fizyczna pamięć (tzw. over-provisioning).",
+                        "Zajmuje całe deklarowane miejsce na dysku fizycznym od razu przy tworzeniu wolumenu, aby zagwarantować bezawaryjność.",
+                        "Fizyczna przestrzeń dyskowa jest alokowana dopiero wtedy, gdy aplikacje i użytkownicy faktycznie zapisują nowe dane na wolumenie.",
+                        "Wymaga monitorowania (np. za pomocą daemona `dmeventd`), aby ostrzec administratora, jeśli pula zbliża się do faktycznego wyczerpania miejsca."
+                    ],
+                    "values": [true, false, true, true]
+                },
+                {
+                    "question": "W jaki sposób w systemie Linux monitorować i sprawdzać stan infrastruktury LVM? Wskaż przydatne, wbudowane polecenia:",
+                    "answers": [
+                        "Polecenia `pvs`, `vgs`, `lvs` pozwalają na wyświetlenie skróconych informacji odpowiednio o dyskach fizycznych, grupach i wolumenach.",
+                        "Polecenie `fdisk -lvm` służy do bezpośredniego tworzenia nowych migawek (snapshots) w trybie graficznym.",
+                        "Polecenia `pvdisplay`, `vgdisplay`, `lvdisplay` wypisują bardzo szczegółowe informacje (np. ilość Extentów, UUID, ścieżki dostępu).",
+                        "Stan monitorowania puli thin provisioning można wymusić lub obserwować używając np. daemona `dmeventd` i systemctl (`lvm2-monitor`)."
+                    ],
+                    "values": [true, false, true, true]
+                },
+                {
+                    "question": "Zdecydowałeś się wymienić w serwerze mały dysk na większy bez przerywania działania usług. Jak w LVM wygląda proces bezpiecznej migracji danych w locie?",
+                    "answers": [
+                        "Migracja działań między dyskami w obrębie jednej grupy (VG) na żywo jest niemożliwa i wymaga uruchomienia systemu z pendrive'a (LiveCD).",
+                        "Nowy dysk należy najpierw dołączyć do grupy VG (za pomocą `vgextend`).",
+                        "Używając polecenia `pvmove /dev/stary_dysk /dev/nowy_dysk` system płynnie i na żywo przeniesie fizyczne ekstenty z jednego urządzenia na drugie.",
+                        "Po udanym przeniesieniu danych, stary dysk należy usunąć z grupy wolumenów za pomocą polecenia `vgreduce`."
+                    ],
+                    "values": [false, true, true, true]
+                },
+                {
+                    "question": "Wskaż poprawne dopasowania komend LVM do ich funkcji operacyjnych na serwerze:",
+                    "answers": [
+                        "`vgcreate lab_vg /dev/sdc /dev/sdd` - utworzy nową grupę o nazwie 'lab_vg' składającą się z dwóch dysków.",
+                        "`lvcreate --type thin-pool -L 5G -n my_pool lab_vg` - utworzy na grupie 'lab_vg' wolumen będący pulą na cienką alokację (thin pool) o rozmiarze 5 GB.",
+                        "`lvcreate -s -n backup_snap -L 1G /dev/lab_vg/data_lv` - usunie wolumen 'data_lv' i wszystkie jego migawki z dysku w sposób bezpieczny.",
+                        "`vgremove` - odmontuje partycje i usunie wszystkie utworzone migawki w zadanym systemie w odstępach 5 minut."
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Jeżeli po utworzeniu migawki danych (snapshot) dokonano niepożądanych zmian w głównym pliku na oryginalnym wolumenie (np. usunięto ważny katalog), to co nastąpi po wydaniu polecenia `lvconvert --merge /dev/VG/snapshot_name`?",
+                    "answers": [
+                        "Wolumen wróci do stanu dokładnie z momentu założenia migawki; omyłkowo usunięty katalog zostanie przywrócony.",
+                        "Spowoduje to bezpowrotną utratę wszystkich danych (formatowanie dysku do zera).",
+                        "Po złączeniu (merge) stan powraca do tego sprzed utworzenia migawki, a sama migawka jest automatycznie usuwana przez LVM.",
+                        "Przed samym złączeniem należy odmontować oryginalny wolumen logiczny (np. używając `umount`), inaczej przywrócenie może się nie powieść od razu."
+                    ],
+                    "values": [true, false, true, true]
+                },
+                {
+                    "question": "Zaznacz wszystkie POPRAWNIE sformułowane polecenia z zakresu zarządzania LVM (uwaga na składnię, kolejność parametrów i literówki):",
+                    "answers": [
+                        "`pvcreate /dev/sdb1 /dev/sdc1`",
+                        "`vgextend data_vg /dev/sdd`",
+                        "`lvcreate -L 50G -n backup_lv system_vg`",
+                        "`lvextend -l +100%FREE /dev/mapper/vg-lv`",
+                        "`vgcreate /dev/sdb1 my_vg`",
+                        "`lvcreate -n 50G -L backup_lv system_vg`",
+                        "`pvremove data_vg`",
+                        "`lvresize -size +10G /dev/system_vg/root_lv`"
+                    ],
+                    "values": [true, true, true, true, false, false, false, false]
+                },
+                {
+                    "question": "Wskaż prawidłowo zbudowane komendy dotyczące tworzenia migawek (snapshots) oraz cienkich pul (thin provisioning):",
+                    "answers": [
+                        "`lvcreate -s -n my_snap -L 5G /dev/vg01/data_lv`",
+                        "`lvcreate --type thin-pool -L 100G -n pool01 vg01`",
+                        "`lvconvert --merge /dev/vg01/my_snap`",
+                        "`lvcreate -V 10G --thin -n thin_vol vg01/pool01`",
+                        "`lvconvert --merge vg01`",
+                        "`lvcreate --type thin-pool -n pool01 -L 100G /dev/sdb1`",
+                        "`lvcreate -V 10G -t thin -n thin_vol vg01`",
+                        "`lvremove -f /dev/vg01`"
+                    ],
+                    "values": [true, true, true, true, false, false, false, false]
+                },
+                {
+                    "question": "Zaznacz poprawne komendy weryfikujące i wyświetlające stan elementów LVM. Które zapisy zadziałają bez rzucania błędów składniowych?",
+                    "answers": [
+                        "`pvs -o pv_name,vg_name,pv_size`",
+                        "`pvmove /dev/sdb1 /dev/sdc1`",
+                        "`vgreduce my_vg /dev/sdb1`",
+                        "`lvchange -a y /dev/my_vg/my_lv`",
+                        "`pvs --output pv_name vg_name`",
+                        "`pvmove my_vg /dev/sdc1`",
+                        "`vgreduce /dev/sdb1 my_vg`",
+                        "`lvchange --active yes /dev/my_vg/my_lv`"
+                    ],
+                    "values": [true, true, true, true, false, false, false, false]
+                },
+                {
+                    "question": "Jak poprawnie i bezpiecznie rozszerzyć wolumen logiczny ORAZ znajdujący się na nim system plików ext4? (Zaznacz prawidłowe składnie lub ciągi poleceń)",
+                    "answers": [
+                        "Jako jedno polecenie: `lvextend -r -L +10G /dev/vg_data/lv_data`",
+                        "Jako dwa polecenia po kolei: `lvextend -L +10G /dev/vg_data/lv_data` a następnie `resize2fs /dev/vg_data/lv_data`",
+                        "Jako dwa polecenia po kolei: `lvextend -L +10G /dev/vg_data/lv_data` a następnie `mkfs.ext4 /dev/vg_data/lv_data`",
+                        "Jako dwa polecenia po kolei: `resize2fs /dev/vg_data/lv_data` a następnie `lvextend -L +10G /dev/vg_data/lv_data`"
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Chcesz całkowicie usunąć istniejącą infrastrukturę LVM (od warstwy najwyższej do najniższej). Które komendy są poprawne SKŁADNIOWO dla tego procesu?",
+                    "answers": [
+                        "`lvremove /dev/vg01/lv01`",
+                        "`vgremove vg01`",
+                        "`pvremove /dev/sdb1 /dev/sdc1`",
+                        "`lvremove vg01`",
+                        "`vgremove /dev/sdb1`",
+                        "`rm -rf /dev/vg01/lv01`"
+                    ],
+                    "values": [true, true, true, false, false, false]
+                },
+                {
+                    "question": "Wskaż poprawnie sformułowane polecenia związane z monitorowaniem zajętości przestrzeni w cienkich wolumenach (Thin Pool):",
+                    "answers": [
+                        "`lvs /dev/lab_vg/lv_thin -o +seg_monitor,data_percent`",
+                        "`systemctl enable lvm2-monitor`",
+                        "`lvs --monitor thin_pool`",
+                        "`systemctl start dmeventd-monitor`"
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Zaznacz wszystkie poprawne sposoby wywołania poleceń informacyjnych o infrastrukturze:",
+                    "answers": [
+                        "`vgdisplay -v vg01`",
+                        "`lvdisplay /dev/vg01/lv_data`",
+                        "`pvdisplay /dev/sda2`",
+                        "`vgdisplay /dev/sda2`",
+                        "`lvdisplay vg01`",
+                        "`pvdisplay vg01`"
+                    ],
+                    "values": [true, true, true, false, false, false]
+                },
+                {
+                    "question": "Które z poniższych poleceń poprawnie utworzy migawkę (snapshot) o określonym rozmiarze dla istniejącego wolumenu?",
+                    "answers": [
+                        "`lvcreate -s -n snap01 -L 1G /dev/vg01/lv_data`",
+                        "`lvcreate --size 1G --snapshot --name snap01 /dev/vg01/lv_data`",
+                        "`lvcreate -s -L 1G /dev/vg01/lv_data /dev/vg01/snap01`",
+                        "`lvcreate -s snap01 -L 1G /dev/vg01/lv_data`"
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "W środowisku LVM można posługiwać się konkretnymi jednostkami (B, M, G) lub jednostkami proporcjonalnymi (np. procenty tzw. Extentów). Jak prawidłowo użyć tych flag?",
+                    "answers": [
+                        "`lvcreate -l 100%FREE -n my_lv vg01`",
+                        "`lvextend -l +50%FREE /dev/vg01/my_lv`",
+                        "`lvcreate -L 100%FREE -n my_lv vg01`",
+                        "`lvextend -L +50%FREE /dev/vg01/my_lv`"
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Wskaż kolejne poprawnie sformułowane polecenia, które powiodą się na serwerze Linux (zarządzanie i modyfikacja nazw/rozmiarów):",
+                    "answers": [
+                        "`lvrename vg01 old_name new_name`",
+                        "`vgrename old_vg new_vg`",
+                        "`lvreduce -L -5G /dev/vg01/lv01`",
+                        "`lvrename old_name new_name vg01`",
+                        "`vgrename /dev/sdb1 new_vg`",
+                        "`lvreduce -l -5GB /dev/vg01/lv01`",
+                        "`vgchange -a false vg01`"
+                    ],
+                    "values": [true, true, true, false, false, false, false]
+                }
+            ]
         }
     ]
 };
