@@ -1757,6 +1757,211 @@ const db = {
             ]
         },
         {
+            "name": "SLURM - Zarządzanie klastrem (LIN)",
+            "questions": [
+                {
+                    "question": "Rozwiń skrót menadżera klastrowego SLURM:",
+                    "answers": [
+                        "Simple Linux Utility for Resource Management",
+                        "Scalable Linux Utility for Resource Management",
+                        "Simple Linux User Resource Manager",
+                        "Synchronized Linux Utility for Resource Monitoring"
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Jakie serwisy (demony) są kluczowe dla działania klastra SLURM i na jakich węzłach pracują? (Wskaż poprawne dopasowania)",
+                    "answers": [
+                        "slurmctld – serwis działający na węźle kontrolera (menadżera), odpowiedzialny za monitorowanie zasobów i planowanie.",
+                        "slurmd – główny serwis kontrolera zarządzający wyłącznie kryptograficzną autoryzacją użytkowników.",
+                        "slurmd – serwis działający na węzłach obliczeniowych (pracownikach), czekający na zadania i raportujący stan sprzętu.",
+                        "slurm-auth – dedykowany demon uwierzytelniający działający tylko i wyłącznie na serwerze zarządzającym."
+                    ],
+                    "values": [true, false, true, false]
+                },
+                {
+                    "question": "Które algorytmy planowania zadań (scheduling) są typowo wykorzystywane i wpierane przez system SLURM?",
+                    "answers": [
+                        "FIFO (First In, First Out) – zadania wykonywane w kolejności ich zgłoszeń do kolejki.",
+                        "Backfill – pozwala na wykonywanie krótszych zadań w lukach czasowych, podczas oczekiwania na zakończenie większych zadań.",
+                        "Planowanie z priorytetami – priorytety są ustalane m.in. na podstawie pilności lub uprawnień danego użytkownika.",
+                        "LIFO (Last In, First Out) – minimalizuje opóźnienia sieciowe faworyzując zadania, które wpłynęły jako ostatnie."
+                    ],
+                    "values": [true, true, true, false]
+                },
+                {
+                    "question": "Za pomocą którego z poniższych poleceń można szybko sprawdzić ogólne informacje o węzłach (czy są bezczynne, przydzielone, czy wyłączone)?",
+                    "answers": [
+                        "sinfo",
+                        "squeue",
+                        "sstat",
+                        "snode -status"
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Co dokładnie oznaczają poszczególne stany zadań w kolejce planowania wyświetlane przez komendę `squeue`?",
+                    "answers": [
+                        "R (Running) – zadanie jest aktualnie uruchomione i wykonuje się na przydzielonym węźle.",
+                        "PD (Pending) – zadanie oczekuje na przydział wymaganych zasobów.",
+                        "CG (Congested) – zadanie zostało wstrzymane tymczasowo z powodu przeciążenia sieci klastra.",
+                        "F (Failed) – zadanie zakończyło się niespodziewanym błędem i wymaga ręcznego restartu."
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "W jaki sposób można wysyłać zadania do wykonania w klastrze SLURM i czym różnią się te metody?",
+                    "answers": [
+                        "Polecenie `srun` natychmiast uruchamia zadanie równoległe, działając w sposób interaktywny.",
+                        "Polecenie `sbatch` wysyła skrypt do kolejki i pozwala uruchomić go później w tle (jest to najpopularniejszy sposób).",
+                        "Polecenie `sbatch` przyjmuje do kolejki wyłącznie skompilowane pliki wykonywalne (np. .c, .exe), a nie zwykłe skrypty bash.",
+                        "Polecenie `srun` służy wyłącznie do awaryjnego przerywania wcześniej zaplanowanych zadań wsadowych w tle."
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Chcesz uruchomić skrypt `my_script.sh` z przekazaniem wartości 1 oraz 2 jako parametrów (w formie tzw. tablicy zadań / array). Która składnia wywołania w terminalu jest bezbłędna?",
+                    "answers": [
+                        "sbatch --array 1,2 my_script.sh",
+                        "sbatch -array=1-2 my_script.sh",
+                        "srun --array[1,2] my_script.sh",
+                        "sbatch --jobs 1,2 my_script.sh"
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "W plikach skryptowych dla polecenia sbatch umieszcza się dedykowane dyrektywy. Wskaż te, które są zapisane POPRAWNIE pod kątem składni i znaczenia:",
+                    "answers": [
+                        "`#SBATCH --nodes=1` (żąda przydzielenia jednego węzła do zadania).",
+                        "`#SBATCH --cpus-per-task=1` (żąda przydzielenia 1 rdzenia procesora na każde zadanie).",
+                        "`#SBATCH -o outfile` (przekierowuje standardowe wyjście stdout do pliku).",
+                        "`#SBATCH --err errfile` (przekierowuje standardowe wyjście błędów stderr do pliku)."
+                    ],
+                    "values": [true, true, true, false]
+                },
+                {
+                    "question": "Narzędzie `munge` służy do uwierzytelniania wewnątrz klastra. Jakie są prawidłowe parametry i kroki konfiguracyjne dla pliku `munge.key` skopiowanego na węzeł roboczy?",
+                    "answers": [
+                        "Właścicielem i grupą dla tego pliku musi zostać użytkownik 'munge' (komenda `chown munge:munge`).",
+                        "Plik ten musi posiadać bardzo restrykcyjne uprawnienia, tj. 700 (dostęp ma tylko jego właściciel).",
+                        "Klucz musi znajdować się w ogólnodostępnym katalogu i mieć prawa 777, aby procesy pracownika mogły go swobodnie odczytywać.",
+                        "Klucz 'munge' jest certyfikatem asymetrycznym, więc kopiuje się na węzeł roboczy tylko klucz publiczny `munge.pub`."
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Co się stanie podczas komunikacji klastra SLURM, jeśli na węzłach roboczych administrator zapomni skonfigurować (lub zrobi błąd) w pliku `/etc/hosts`?",
+                    "answers": [
+                        "SLURM nie będzie w stanie poprawnie rozwiązać nazw takich jak 'node0' czy 'node1' na adresy IP, co uniemożliwi wewnętrzną komunikację węzłów.",
+                        "Węzły automatycznie rozpoczną odpytywanie zewnętrznych, globalnych serwerów DNS w celu odnalezienia węzła kontrolera.",
+                        "Autoryzacja za pomocą serwisu munge będzie przebiegała bez problemu, ale sbatch odrzuci zadania wsadowe ze względów bezpieczeństwa.",
+                        "Usługa NFS automatycznie zaktualizuje brakujące mapowania nazw podczas pierwszej operacji mount, obchodząc problem."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Zaznacz poprawne polecenie, które służy do przesłania klucza publicznego autoryzacji SSH na zdalną maszynę (np. na nodel):",
+                    "answers": [
+                        "ssh-copy-id node1",
+                        "ssh-keygen -copy node1",
+                        "scp ~/.ssh/id_rsa node1:/etc/ssh/",
+                        "ssh node1 --add-key"
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "W jaki sposób należy prawidłowo nadać uprawnienia oraz własność dla nowo utworzonego pliku `/etc/slurm/slurm.conf` (według instrukcji laboratoryjnej)?",
+                    "answers": [
+                        "Należy użyć polecenia `sudo chown root:root /etc/slurm/slurm.conf`",
+                        "Należy użyć polecenia `sudo chmod 755 /etc/slurm/slurm.conf`",
+                        "Należy użyć polecenia `sudo chown slurm:slurm /etc/slurm/slurm.conf`",
+                        "Należy użyć polecenia `sudo chmod 777 /etc/slurm/slurm.conf`"
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Jak prawidłowo włączyć przy starcie oraz natychmiast zrestartować systemową usługę (np. kontrolera SLURM) używając narzędzia systemctl?",
+                    "answers": [
+                        "sudo systemctl enable slurmctld",
+                        "sudo systemctl restart slurmctld",
+                        "sudo service slurmctld-daemon reload",
+                        "sudo systemctl force-boot slurmctld"
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Aby stworzyć współdzieloną przestrzeń wymiany plików między kontrolerem a pracownikami instaluje się serwer NFS. Jakie komendy dla węzła node0 są POPRAWNE (instalacja i reset usługi)?",
+                    "answers": [
+                        "`sudo apt install nfs-kernel-server`",
+                        "`sudo systemctl restart nfs-kernel-server`",
+                        "`sudo apt install nfs-server-daemon`",
+                        "`sudo systemctl restart nfsd`"
+                    ],
+                    "values": [true, true, false, false]
+                },
+                {
+                    "question": "Po pomyślnym dopisaniu reguły w pliku `/etc/exports` (np. `/home/sysop/shared *(rw,sync,no_root_squash, no_subtree_check)`), jakiego polecenia używa się do rozgłoszenia (wyeksportowania) tych zmian w NFS w trybie natychmiastowym?",
+                    "answers": [
+                        "sudo exportfs -a",
+                        "sudo mount -a",
+                        "sudo nfs-export --reload",
+                        "sudo exports -u"
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "W jaki sposób z poziomu węzłów pracowniczych (node1, node2) podmontujesz ręcznie dysk udostępniony w technologii NFS z kontrolera (node0)? Wskaż poprawne pod względem flag polecenie:",
+                    "answers": [
+                        "sudo mount -t nfs node0:/home/sysop/shared /home/sysop/shared",
+                        "sudo mount -type nfs node0:/home/sysop/shared /home/sysop/shared",
+                        "sudo nfs-mount node0:/home/sysop/shared /home/sysop/shared",
+                        "sudo mount node0/home/sysop/shared -t nfs /home/sysop/shared"
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Wywołując komendę `squeue` wyświetlasz podgląd kolejki. Za jakie informacje odpowiadają domyślnie nagłówki JOBID, USER i TIME?",
+                    "answers": [
+                        "JOBID - wskazuje unikalny identyfikator przydzielonego zadania do wykonania.",
+                        "USER - wskazuje użytkownika, który zakolejkował / zlecił dane zadanie.",
+                        "TIME - obrazuje jak długo zadanie było kompilowane przed wpuszczeniem do kolejki.",
+                        "TIME - w przypadku stanu 'R' wskazuje rzeczywisty upływający czas wykonania uruchomionego zadania."
+                    ],
+                    "values": [true, true, false, true]
+                },
+                {
+                    "question": "Zgodnie z instrukcją laboratorium po instalacji pakietów narzędzia `munge`, należało zweryfikować czy serwis generujący autoryzację reaguje poprawnie w konsoli. Służy do tego łańcuch poleceń:",
+                    "answers": [
+                        "`munge -n | unmunge | grep STATUS`",
+                        "`slurm-munge-test --all`",
+                        "`ping munge:22`",
+                        "`systemctl check munge.key`"
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "W jakim trybie podłączone zostały wirtualne karty sieciowe klastra VirtualBox do obsługi laboratorium ze SLURM?",
+                    "answers": [
+                        "W trybie NAT Network (Sieć NAT) po uprzednim dodaniu wspólnej sieci w narzędziach maszyny.",
+                        "W trybie Bridged Adapter (Mostkowana karta sieciowa) z dostępem do fizycznego routera.",
+                        "W trybie Host-Only Network (Sieć tylko dla Hosta).",
+                        "W trybie Internal Network (Sieć wewnętrzna), izolująca węzły całkowicie od dostępu do internetu."
+                    ],
+                    "values": [true, false, false, false]
+                },
+                {
+                    "question": "Przy tworzeniu skryptu dla polecenia `sbatch` obowiązują ścisłe reguły budowy pliku tekstowego. Wskaż prawdziwe stwierdzenia:",
+                    "answers": [
+                        "Na samej górze pliku powinna zostać zdefiniowana interpretowana powłoka systemowa tzw. shebang, np. `#!/bin/bash`.",
+                        "Wszystkie parametry sterujące (przydział rdzeni, węzłów) zapisywane są u góry w linijkach zaczynających się od komentarza `#SBATCH`.",
+                        "Komenda właściwa do uruchomienia głównego programu (np. `python skrypt.py`) znajduje się zwykle pod blokiem ustawień konfiguracyjnych `#SBATCH`.",
+                        "Znacznik `#SBATCH -e errfile` służy jako interpreter kodu i jeśli program posiada błąd kompilacji, SLURM wyłączy cały klaster."
+                    ],
+                    "values": [true, true, true, false]
+                }
+            ]
+        },
+        {
             "name": "LIN Kernel (LINUX)",
             "questions": [
                 {
